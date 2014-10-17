@@ -2,7 +2,8 @@
   "Database": {
     "Host": "localhost\\sqlexpress",
     "Username": "sa",
-    "Password": "opencbs"
+    "Password": "opencbs",
+    "Name": "opencbs"
   }
 }
 

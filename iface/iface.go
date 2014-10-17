@@ -2,6 +2,8 @@ package iface
 
 import (
 	"net/http"
+	"database/sql"
 )
 
-var GetConnectionString func(r *http.Request) string
+var GetConnection func(r *http.Request) (*sql.DB, error)
+

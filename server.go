@@ -7,6 +7,17 @@ import (
 
 func main() {
 	bootstrap()
-	fmt.Println(iface.GetConnectionString(nil))
+
+	conn, err := iface.GetConnection(nil)
+	if err != nil {
+		panic(err)
+	}
+
+	err = conn.Ping()
+	if err != nil {
+		panic(err)
+	}
+	defer conn.Close()
+	fmt.Println("OK")
 }
 
