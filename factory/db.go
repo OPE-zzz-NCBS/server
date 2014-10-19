@@ -21,7 +21,7 @@ func GetMsSqlDb(r *http.Request) (*sql.DB, error) {
 		return nil, err
 	}
 
-	template := "server=%s;user id=%s;password=%s;database=%s"
+	template := "server=%s;user id=%s;password=%s;database=%s;timeout=5"
 	connString := fmt.Sprintf(template, config.Database.Host, config.Database.Username, config.Database.Password, config.Database.Name)
 	db, err = sql.Open("mssql", connString)
 	return db, err

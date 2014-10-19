@@ -4,13 +4,14 @@ import (
 	"log"
 	"net/http"
 	"github.com/gorilla/mux"
-	"github.com/OPENCBS/server/iface"
+	//"github.com/OPENCBS/server/iface"
 	"github.com/OPENCBS/server/api"
 )
 
 func main() {
 	bootstrap()
 
+	/*
 	db, err := iface.GetDb(nil)
 	if err != nil {
 		panic(err)
@@ -21,6 +22,7 @@ func main() {
 		panic(err)
 	}
 	defer db.Close()
+	*/
 
 	// Set up routes
 	router := mux.NewRouter()
