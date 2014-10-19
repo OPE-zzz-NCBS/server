@@ -5,5 +5,5 @@ import (
 	"database/sql"
 )
 
-var GetConnection func(r *http.Request) (*sql.DB, error)
+var GetDb func(r *http.Request) (*sql.DB, error)
 

@@ -8,16 +8,16 @@ import (
 func main() {
 	bootstrap()
 
-	conn, err := iface.GetConnection(nil)
+	db, err := iface.GetDb(nil)
 	if err != nil {
 		panic(err)
 	}
 
-	err = conn.Ping()
+	err = db.Ping()
 	if err != nil {
 		panic(err)
 	}
-	defer conn.Close()
+	defer db.Close()
 	fmt.Println("OK")
 }
 

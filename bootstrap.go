@@ -6,5 +6,5 @@ import (
 )
 
 func bootstrap() {
-	iface.GetConnection = factory.GetMsSqlConnection
+	iface.GetDb = factory.GetMsSqlDb
 }

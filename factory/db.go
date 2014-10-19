@@ -8,17 +8,22 @@ import (
 	"github.com/OPENCBS/server/config"
 )
 
-func GetMsSqlConnection(r *http.Request) (conn *sql.DB, err error) {
-	conn = nil
+var db *sql.DB
+
+func GetMsSqlDb(r *http.Request) (*sql.DB, error) {
+	if db != nil {
+		return db, nil
+	}
+
 	var config config.Configuration
-	err = config.Read()
+	err := config.Read()
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	template := "server=%s;user id=%s;password=%s;database=%s"
 	connString := fmt.Sprintf(template, config.Database.Host, config.Database.Username, config.Database.Password, config.Database.Name)
-	conn, err = sql.Open("mssql", connString)
-	return
+	db, err = sql.Open("mssql", connString)
+	return db, err
 }
 
