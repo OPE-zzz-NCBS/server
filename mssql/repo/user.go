@@ -19,7 +19,7 @@ func (repo MsSqlUserRepo) Find(db *sql.DB) ([]model.User, error) {
 	var lastName string
 	var users []model.User
 
-	var sql = "select id, user_name, first_name, last_name from dbo.Users where id = 123"
+	var sql = "select id, user_name, first_name, last_name from dbo.Users"
 	rows, err := db.Query(sql)
 	if err != nil {
 		return nil, err
