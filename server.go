@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 	"net/http"
-	"github.com/gorilla/mux"
 	//"github.com/OPENCBS/server/iface"
+	"github.com/drone/routes"
 	"github.com/OPENCBS/server/api"
 )
 
@@ -25,10 +25,10 @@ func main() {
 	*/
 
 	// Set up routes
-	router := mux.NewRouter()
-	router.HandleFunc("/api/users", api.GetUsers).Methods("GET")
+	mux := routes.New()
+	mux.Get("/api/users", api.GetUsers)
 
-	http.Handle("/", router)
+	http.Handle("/", mux)
 	log.Println("Listening...")
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
