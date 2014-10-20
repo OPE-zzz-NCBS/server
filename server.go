@@ -30,6 +30,9 @@ func main() {
 
 	http.Handle("/", router)
 	log.Println("Listening...")
-	http.ListenAndServe(":8080", nil)
+	err := http.ListenAndServe(":8080", nil)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
