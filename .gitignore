@@ -1,2 +1,3 @@
 server
 conf.json
+*.pyc
