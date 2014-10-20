@@ -27,6 +27,7 @@ func main() {
 	// Set up routes
 	mux := routes.New()
 	mux.Get("/api/users", api.GetUsers)
+	mux.Get("/api/users/:id([0-9]+)", api.GetUser)
 
 	http.Handle("/", mux)
 	log.Println("Listening...")

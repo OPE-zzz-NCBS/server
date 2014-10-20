@@ -19,8 +19,8 @@ func (repo MsSqlUserRepo) FindAll(db *sql.DB) ([]model.User, error) {
 	var lastName string
 	var users []model.User
 
-	var sql = "select id, user_name, first_name, last_name from dbo.Users"
-	rows, err := db.Query(sql)
+	var query = "select id, user_name, first_name, last_name from dbo.Users"
+	rows, err := db.Query(query)
 	if err != nil {
 		return nil, err
 	}
@@ -40,5 +40,22 @@ func (repo MsSqlUserRepo) FindAll(db *sql.DB) ([]model.User, error) {
 	}
 
 	return users, nil
+}
+
+func (repo MsSqlUserRepo) FindById(db *sql.DB, id int) (*model.User, error) {
+	var userName string
+	var firstName string
+	var lastName string
+
+	var query = "select user_name, first_name, last_name from dbo.Users where id = ?"
+	err := db.QueryRow(query, id).Scan(&userName, &firstName, &lastName)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+
+	if err != nil {
+		return nil, err
+	}
+	return &model.User{id, userName, firstName, lastName}, nil
 }
 
