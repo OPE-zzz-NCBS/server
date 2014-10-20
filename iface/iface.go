@@ -8,7 +8,7 @@ import (
 
 // Repositories
 type UserRepo interface {
-	Find(db *sql.DB) ([]model.User, error)
+	FindAll(db *sql.DB) ([]model.User, error)
 }
 
 var GetDb func(r *http.Request) (*sql.DB, error)

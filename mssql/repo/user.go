@@ -12,7 +12,7 @@ func NewMsSqlUserRepo() iface.UserRepo {
 	return &MsSqlUserRepo{}
 }
 
-func (repo MsSqlUserRepo) Find(db *sql.DB) ([]model.User, error) {
+func (repo MsSqlUserRepo) FindAll(db *sql.DB) ([]model.User, error) {
 	var id int
 	var userName string
 	var firstName string

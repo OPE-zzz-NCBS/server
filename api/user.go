@@ -18,7 +18,7 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 	}
 
 	repo = iface.NewUserRepo()
-	users, err = repo.Find(db)
+	users, err = repo.FindAll(db)
 	if err != nil {
 		goto Error
 	}
