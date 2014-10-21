@@ -61,7 +61,7 @@ func AddSession(w http.ResponseWriter, r *http.Request) {
 	// Cache session and return to the client
 	session = &model.Session{token, user}
 	model.SetSession(token, session)
-	log.Printf("created a session for user \"%s\"", user.UserName)
+	log.Printf("created a session for user \"%s\"", user.Username)
 
 	js, err = json.MarshalIndent(session, "", "  ")
 	if err != nil {
@@ -84,7 +84,7 @@ func DeleteSession(w http.ResponseWriter, r *http.Request) {
 	session := model.GetSession(token)
 	if session != nil {
 		model.DeleteSession(token)
-		log.Printf("deleted the session for user \"%s\"", session.User.UserName)
+		log.Printf("deleted the session for user \"%s\"", session.User.Username)
 	}
 	w.WriteHeader(200)
 }

@@ -14,7 +14,7 @@ func NewMsSqlUserRepo() iface.UserRepo {
 
 func (repo MsSqlUserRepo) FindAll(db *sql.DB) ([]model.User, error) {
 	var id int
-	var userName string
+	var username string
 	var firstName string
 	var lastName string
 	var users []model.User
@@ -27,11 +27,11 @@ func (repo MsSqlUserRepo) FindAll(db *sql.DB) ([]model.User, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		err := rows.Scan(&id, &userName, &firstName, &lastName)
+		err := rows.Scan(&id, &username, &firstName, &lastName)
 		if err != nil {
 			return nil, err
 		}
-		user := model.User{id, userName, firstName, lastName}
+		user := model.User{id, username, firstName, lastName}
 		users = append(users, user)
 	}
 	err = rows.Err()
@@ -43,12 +43,12 @@ func (repo MsSqlUserRepo) FindAll(db *sql.DB) ([]model.User, error) {
 }
 
 func (repo MsSqlUserRepo) FindById(db *sql.DB, id int) (*model.User, error) {
-	var userName string
+	var username string
 	var firstName string
 	var lastName string
 
 	var query = "select user_name, first_name, last_name from dbo.Users where id = ?"
-	err := db.QueryRow(query, id).Scan(&userName, &firstName, &lastName)
+	err := db.QueryRow(query, id).Scan(&username, &firstName, &lastName)
 	if err == sql.ErrNoRows {
 		return nil, nil
 	}
@@ -56,7 +56,7 @@ func (repo MsSqlUserRepo) FindById(db *sql.DB, id int) (*model.User, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &model.User{id, userName, firstName, lastName}, nil
+	return &model.User{id, username, firstName, lastName}, nil
 }
 
 func (repo MsSqlUserRepo) FindByUsernameAndPassword(db *sql.DB, username string, password string) (*model.User, error) {
