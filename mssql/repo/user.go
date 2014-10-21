@@ -59,3 +59,20 @@ func (repo MsSqlUserRepo) FindById(db *sql.DB, id int) (*model.User, error) {
 	return &model.User{id, userName, firstName, lastName}, nil
 }
 
+func (repo MsSqlUserRepo) FindByUsernameAndPassword(db *sql.DB, username string, password string) (*model.User, error) {
+	var id int
+	var firstName string
+	var lastName string
+
+	var query = "select id, first_name, last_name from dbo.Users where user_name = ? and user_pass = ?"
+	err := db.QueryRow(query, username, password).Scan(&id, &firstName, &lastName)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+
+	if err != nil {
+		return nil, err
+	}
+	return &model.User{id, username, firstName, lastName}, nil
+}
+
