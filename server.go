@@ -26,7 +26,7 @@ func main() {
 	// Set up routes
 	mux := routes.New()
 	mux.Get("/api/users", protected(api.GetUsers))
-	mux.Get("/api/users/:id([0-9]+)", api.GetUser)
+	mux.Get("/api/users/:id([0-9]+)", protected(api.GetUser))
 
 	mux.Post("/api/sessions", api.AddSession)
 	mux.Del("/api/sessions", protected(api.DeleteSession))
