@@ -26,7 +26,7 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 		goto Error
 	}
 
-	js, err = json.Marshal(users)
+	js, err = json.MarshalIndent(users, "", "  ")
 	if err != nil {
 		goto Error
 	}
@@ -63,7 +63,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 		goto Error
 	}
 
-	js, err = json.Marshal(user)
+	js, err = json.MarshalIndent(user, "", "  ")
 	if err != nil {
 		goto Error
 	}
