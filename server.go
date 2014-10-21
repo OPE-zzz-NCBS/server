@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 	"net/http"
-	//"github.com/OPENCBS/server/iface"
 	"github.com/drone/routes"
 	"github.com/OPENCBS/server/api"
 	"github.com/OPENCBS/server/model"
@@ -23,19 +22,6 @@ func protected(fn func(w http.ResponseWriter, r *http.Request)) http.HandlerFunc
 
 func main() {
 	bootstrap()
-
-	/*
-	db, err := iface.GetDb(nil)
-	if err != nil {
-		panic(err)
-	}
-
-	err = db.Ping()
-	if err != nil {
-		panic(err)
-	}
-	defer db.Close()
-	*/
 
 	// Set up routes
 	mux := routes.New()
