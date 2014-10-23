@@ -7,3 +7,7 @@ type User struct {
 	LastName string `json:"lastName"`
 }
 
+func NewUser() *User {
+	return new(User)
+}
+

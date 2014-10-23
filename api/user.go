@@ -13,7 +13,7 @@ import (
 func GetUsers(w http.ResponseWriter, r *http.Request) {
 	var js []byte
 	var repo iface.UserRepo
-	var users []model.User
+	var users []*model.User
 
 	db, err := iface.GetDb(r)
 	if err != nil {

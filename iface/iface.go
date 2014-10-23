@@ -8,7 +8,7 @@ import (
 
 // Repositories
 type UserRepo interface {
-	FindAll(db *sql.DB) ([]model.User, error)
+	FindAll(db *sql.DB) ([]*model.User, error)
 	FindById(db *sql.DB, id int) (*model.User, error)
 	FindByUsernameAndPassword(db *sql.DB, username string, password string) (*model.User, error)
 }
