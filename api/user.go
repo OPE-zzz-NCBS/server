@@ -4,10 +4,12 @@ import (
 	"encoding/json"
 	"net/http"
 	"log"
+	"fmt"
 	"strconv"
 	"database/sql"
 	"github.com/OPENCBS/server/iface"
 	"github.com/OPENCBS/server/model"
+	"github.com/OPENCBS/server/util"
 )
 
 func GetUsers(w http.ResponseWriter, r *http.Request) {
@@ -24,6 +26,9 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 	users, err = repo.FindAll(db)
 	if err != nil {
 		goto Error
+	}
+	for _, user := range users {
+		user.Href = fmt.Sprintf("%s/users/%d", util.GetBaseUrl(r), user.Id)
 	}
 
 	js, err = json.MarshalIndent(users, "", "  ")
@@ -62,6 +67,10 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		goto Error
 	}
+	if user == nil {
+		goto NotFound
+	}
+	user.Href = fmt.Sprintf("%s/users/%d", util.GetBaseUrl(r), user.Id)
 
 	js, err = json.MarshalIndent(user, "", "  ")
 	if err != nil {
@@ -70,6 +79,10 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json;charset=utf-8")
 	w.Write(js)
+	return
+
+NotFound:
+	http.Error(w, "User not found", http.StatusNotFound)
 	return
 
 Error:
