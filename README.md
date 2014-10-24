@@ -12,7 +12,7 @@ $ export PATH=$PATH:$GOPATH/bin
 
 To save the variable accross terminal sessions add these lines into the `.bash_profile` file:
 
-```
+```bash
 export GOPATH=$HOME/go
 export PATH="$PATH:$GOPATH/bin"
 ```
@@ -21,7 +21,7 @@ In *Windows* go to `Start`, right-click `Computer` and choose `Properties`. Open
 
 Open a terminal and type in:
 
-```
+```bash
 echo $GOPATH
 ```
 
