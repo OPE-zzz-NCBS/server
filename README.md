@@ -17,7 +17,7 @@ export GOPATH=$HOME/go
 export PATH="$PATH:$GOPATH/bin"
 ```
 
-In *Windows* go to `Start`, right-click `Computer` and choose `Properties`. Open up the `Advanced system settings` window and click the `Environment Variables...` button. Click `New...`, type in `GOPATH` in the variable name field, and enter a valid path in the variable value field. Close all the windows by clicking `OK`.
+In *Windows* go to *Start*, right-click *Computer* and choose *Properties*. Open up the *Advanced system settings* window and click the *Environment Variables...* button. Click *New...*, type in `GOPATH` in the variable name field, and enter a valid path in the variable value field. Close all the windows by clicking *OK*.
 
 Open a terminal and type in:
 
