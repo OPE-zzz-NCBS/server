@@ -1,6 +1,6 @@
 ## Quick Start
 
-Since the server is written in Go you want to make sure the `$GOPATH` environment variable is properly set up. You can learn more about it in the (How to Write Go Code)[https://golang.org/doc/code.html] article. But here is a condensed version of it.
+Since the server is written in Go you want to make sure the `$GOPATH` environment variable is properly set up. You can learn more about it in the [How to Write Go Code](https://golang.org/doc/code.html) article. But here is a condensed version of it.
 
 If you are on *Linux* or *OS X* run these commands:
 
