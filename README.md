@@ -5,8 +5,9 @@ The OPENCBS server is written in Go and this section assumes that you have insta
 To get started, you need to:
 
 1. Set up the `$GOPATH` environment variable
-2. Build the server
-3. Connect to a database
+2. Build
+3. Configure
+4. Run the server
 
 ## Setting up `$GOPATH`
 
@@ -45,3 +46,30 @@ The repository resides in `$GOPATH/src/github.com/OPENCBS/server`. If you want t
 $ cd $GOPATH/src/github.com/OPENCBS/server
 $ go build .
 ```
+
+## Configuring
+
+When the server starts it reads in configuration options from the `conf.json` file. This file *does not* exist by default, but you can create it by copying from the template:
+
+```bash
+$ cp conf.sample.json conf.json
+```
+
+The file looks like this:
+
+```
+{
+  "Server": {
+    "Port": 8080
+  },
+  "Database": {
+    "Host": "localhost\\sqlexpress",
+    "Username": "sa",
+    "Password": "opencbs",
+    "Name": "opencbs"
+  }
+}
+```
+
+As you see, you can adjust the port that the server will listen on and the database connection.
+
