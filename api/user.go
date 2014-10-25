@@ -15,7 +15,10 @@ import (
 func GetUsers(w http.ResponseWriter, r *http.Request) {
 	var js []byte
 	var repo iface.UserRepo
-	var users []*model.User
+	var items []*model.User
+	var users *model.Users
+	var offset int
+	var limit int
 
 	db, err := iface.GetDb(r)
 	if err != nil {
@@ -23,13 +26,20 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 	}
 
 	repo = iface.NewUserRepo()
-	users, err = repo.FindAll(db)
+	offset = util.GetOffset(r)
+	limit = util.GetLimit(r)
+	items, err = repo.FindAll(db, offset, limit)
 	if err != nil {
 		goto Error
 	}
-	for _, user := range users {
+	for _, user := range items {
 		user.Href = fmt.Sprintf("%s/users/%d", util.GetBaseUrl(r), user.Id)
 	}
+	users = new(model.Users)
+	users.Href = fmt.Sprintf("%s/users", util.GetBaseUrl(r))
+	users.Offset = offset
+	users.Limit = limit
+	users.Items = items
 
 	js, err = json.MarshalIndent(users, "", "  ")
 	if err != nil {

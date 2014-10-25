@@ -12,11 +12,18 @@ func NewMsSqlUserRepo() iface.UserRepo {
 	return &MsSqlUserRepo{}
 }
 
-func (repo MsSqlUserRepo) FindAll(db *sql.DB) ([]*model.User, error) {
+func (repo MsSqlUserRepo) FindAll(db *sql.DB, offset int, limit int) ([]*model.User, error) {
 	var users []*model.User
 
-	var query = "select id, user_name, first_name, last_name from dbo.Users"
-	rows, err := db.Query(query)
+	var query =
+		"select id, user_name, first_name, last_name " +
+		"from (" +
+		"	select id, user_name, first_name, last_name, " +
+		"		row_number() over (order by id asc) num " +
+		"	from dbo.Users " +
+		") t " +
+		"where t.num between ? and ?"
+	rows, err := db.Query(query, offset + 1, offset + limit)
 	if err != nil {
 		return nil, err
 	}
