@@ -74,19 +74,17 @@ The file looks like this:
 
 As you see, you can adjust the port that the server will listen on and the database connection.
 
-There is a couple of things to be aware of when configuring the server. First, if the database host includes a backslash, you should escape it with an extra backslash as in the sample. Second, you have to make sure that the MS SQL Server instance on your computer accepts external connections.
-
 ## Allowing remote connections
 
-Just before running the OPENCBS server you want to make sure that the MS SQL Server instance allows remote connections. This involves a couple of steps.
+Just before running the OPENCBS server you want to verify that the MS SQL Server instance allows remote connections. This involves a couple of steps.
 
-First, if you run MS SQL Server 2008 or 2008 R2 you have to find out if it is upgraded to Service Pack 2. Run this query in the MS SQL Management Studio:
+First, if you run MS SQL Server 2008 or 2008 R2 you have to find out if it is upgraded to Service&nbsp;Pack&nbsp;2. Run this query in the MS SQL Management Studio:
 
 ```sql
 select @@version
 ```
 
-If it says "Service Pack 2" then you are good. Otherwise, you have to download and install it.
+If it says "Service&nbsp;Pack&nbsp;2" then you are good. Otherwise, you have to download and install it.
 
 Second, you want to explicitly allow remote connections to the MS SQL Server instance.
 
