@@ -1,4 +1,7 @@
 {
+  "Server": {
+    "Port": 8080
+  },
   "Database": {
     "Host": "localhost\\sqlexpress",
     "Username": "sa",

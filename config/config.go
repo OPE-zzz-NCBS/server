@@ -5,6 +5,10 @@ import (
 	"encoding/json"
 )
 
+type Server struct {
+	Port int
+}
+
 type Database struct {
 	Host string
 	Username string
@@ -13,22 +17,30 @@ type Database struct {
 }
 
 type Configuration struct {
-	Database Database
+	Server *Server
+	Database *Database
 }
 
-func (c *Configuration) Read() (err error) {
+var configuration *Configuration
+
+func Get() (*Configuration, error) {
+	if configuration != nil {
+		return configuration, nil
+	}
+
 	file, err := os.Open("conf.json")
 	if err != nil {
-		return
+		return nil, err
 	}
 	defer file.Close()
 
 	decoder := json.NewDecoder(file)
-	err = decoder.Decode(c)
+	configuration = new(Configuration)
+	err = decoder.Decode(configuration)
 	if err != nil {
-		return
+		configuration = nil
+		return nil, err
 	}
-	err = nil
-	return
+	return configuration, nil
 }
 

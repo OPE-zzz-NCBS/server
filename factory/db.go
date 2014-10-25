@@ -15,14 +15,18 @@ func GetMsSqlDb(r *http.Request) (*sql.DB, error) {
 		return db, nil
 	}
 
-	var config config.Configuration
-	err := config.Read()
+	var conf *config.Configuration
+	conf, err := config.Get()
 	if err != nil {
 		return nil, err
 	}
 
-	template := "server=%s;user id=%s;password=%s;database=%s;timeout=5"
-	connString := fmt.Sprintf(template, config.Database.Host, config.Database.Username, config.Database.Password, config.Database.Name)
+	template := "server=%s;user id=%s;password=%s;database=%s;connection timeout=5"
+	connString := fmt.Sprintf(template,
+		conf.Database.Host,
+		conf.Database.Username,
+		conf.Database.Password,
+		conf.Database.Name)
 	db, err = sql.Open("mssql", connString)
 	return db, err
 }

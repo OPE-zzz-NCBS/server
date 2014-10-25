@@ -2,8 +2,10 @@ package main
 
 import (
 	"log"
+	"fmt"
 	"net/http"
 	"github.com/drone/routes"
+	"github.com/OPENCBS/server/config"
 	"github.com/OPENCBS/server/api"
 	"github.com/OPENCBS/server/model"
 )
@@ -21,6 +23,11 @@ func protected(fn func(w http.ResponseWriter, r *http.Request)) http.HandlerFunc
 }
 
 func main() {
+	conf, err := config.Get()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	bootstrap()
 
 	// Set up routes
@@ -32,8 +39,9 @@ func main() {
 	mux.Del("/api/sessions", protected(api.DeleteSession))
 
 	http.Handle("/", mux)
-	log.Println("Listening...")
-	err := http.ListenAndServe(":8080", nil)
+	log.Println("OPENCBS Server")
+	addr := fmt.Sprintf(":%d", conf.Server.Port)
+	err = http.ListenAndServe(addr, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
