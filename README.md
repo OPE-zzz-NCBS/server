@@ -72,7 +72,7 @@ The file looks like this:
 }
 ```
 
-As you see, you can adjust the port that the server will listen on and the database connection.
+As you see, you can adjust the port that the server will listen on and the database connection. Please note that if the database hostname contains a backslash it has to be escaped by an extra backslash.
 
 ## Allowing remote connections
 
