@@ -73,3 +73,15 @@ The file looks like this:
 
 As you see, you can adjust the port that the server will listen on and the database connection.
 
+There is a couple of things to be aware of when configuring the server. First, if the database host includes a backslash, you should escape it with an extra backslash as in the sample. Second, you have to make sure that the MS SQL Server instance on your computer accepts external connections.
+
+## Running
+
+To run the server, execute this command:
+
+```bash
+$ ./server
+```
+
+If everything went smoothly, the server will start accepting connections. Otherwise, it will print out an error message and exit.
+
