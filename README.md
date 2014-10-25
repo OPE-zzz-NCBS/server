@@ -28,3 +28,20 @@ export PATH="$PATH:$GOPATH/bin"
 ```
 
 In *Windows* go to *Start*, right-click *Computer* and choose *Properties*. Open up the *Advanced system settings* window and click the *Environment Variables* button. Click *New*, type in `GOPATH` in the variable name field, and enter a valid path in the variable value field. Close all the windows by clicking *OK*.
+
+## Building
+
+Getting the source code and building it could not be easier with Go. Just run this command:
+
+```bash
+$ go get github.com/OPENCBS/server
+```
+
+This will clone the repository, fetch all the dependencies, and build the project.
+
+The repository resides in `$GOPATH/src/github.com/OPENCBS/server`. If you want to rebuild it, run these:
+
+```bash
+$ cd $GOPATH/src/github.com/OPENCBS/server
+$ go build .
+```
