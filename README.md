@@ -86,7 +86,7 @@ select @@version
 
 If it says "Service&nbsp;Pack&nbsp;2" then you are good. Otherwise, you have to download and install it.
 
-Second, you want to explicitly allow remote connections to the MS SQL Server instance. Googling revealed a number of [detailed articles](http://blogs.msdn.com/b/walzenbach/archive/2010/04/14/how-to-enable-remote-connections-in-sql-server-2008.aspx) on [how to do it](http://stackoverflow.com/questions/11278114/enable-remote-connections-for-sql-server-express-2012).
+Second, you want to explicitly allow remote connections to the MS SQL Server instance. Googling reveales a number of [detailed articles](http://blogs.msdn.com/b/walzenbach/archive/2010/04/14/how-to-enable-remote-connections-in-sql-server-2008.aspx) on [how to do it](http://stackoverflow.com/questions/11278114/enable-remote-connections-for-sql-server-express-2012).
 
 ## Running
 
