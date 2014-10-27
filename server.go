@@ -13,7 +13,7 @@ import (
 
 func protected(fn func(w http.ResponseWriter, r *http.Request)) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		token := r.Header.Get("X-Authentication-Token")
+		token := r.Header.Get("X-Access-Token")
 		session := model.GetSession(token)
 		if session == nil {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)

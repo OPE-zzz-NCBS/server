@@ -80,7 +80,7 @@ Error:
 }
 
 func DeleteSession(w http.ResponseWriter, r *http.Request) {
-	token := r.Header.Get("X-Authentication-Token")
+	token := r.Header.Get("X-Access-Token")
 	session := model.GetSession(token)
 	if session != nil {
 		model.DeleteSession(token)
