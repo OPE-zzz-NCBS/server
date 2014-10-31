@@ -13,6 +13,12 @@ type UserRepo interface {
 	FindByUsernameAndPassword(db *sql.DB, username string, password string) (*model.User, error)
 }
 
+type ClientRepo interface {
+	FindAll(db *sql.DB, offset int, limit int) ([]*model.Client, error)
+}
+
 var GetDb func(r *http.Request) (*sql.DB, error)
+
 var NewUserRepo func() UserRepo 
+var NewClientRepo func() ClientRepo
 

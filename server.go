@@ -49,6 +49,8 @@ func main() {
 	mux.Post("/api/sessions", api.AddSession)
 	mux.Del("/api/sessions", protected(api.DeleteSession))
 
+	mux.Get("/api/clients", api.GetClients)
+
 	http.Handle("/", mux)
 	log.Println("OPENCBS Server")
 	addr := fmt.Sprintf(":%d", conf.Server.Port)

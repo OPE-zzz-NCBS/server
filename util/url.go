@@ -28,3 +28,7 @@ func GetClientsUrl(r *http.Request) string {
 	return fmt.Sprintf("%s/clients", GetBaseUrl(r))
 }
 
+func GetClientUrl(r *http.Request, c *model.Client) string {
+	return ""
+}
+

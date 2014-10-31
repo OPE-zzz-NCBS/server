@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"net/http"
 	"log"
-	"fmt"
 	"strconv"
 	"database/sql"
 	"github.com/OPENCBS/server/iface"
@@ -33,10 +32,10 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 		goto Error
 	}
 	for _, user := range items {
-		user.Href = fmt.Sprintf("%s/users/%d", util.GetBaseUrl(r), user.Id)
+		user.Href = util.GetUserUrl(r, user)
 	}
 	users = new(model.Users)
-	users.Href = fmt.Sprintf("%s/users", util.GetBaseUrl(r))
+	users.Href = util.GetUsersUrl(r)
 	users.Offset = offset
 	users.Limit = limit
 	users.Items = items
@@ -80,7 +79,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	if user == nil {
 		goto NotFound
 	}
-	user.Href = fmt.Sprintf("%s/users/%d", util.GetBaseUrl(r), user.Id)
+	user.Href = util.GetUserUrl(r, user)
 
 	js, err = json.MarshalIndent(user, "", "  ")
 	if err != nil {

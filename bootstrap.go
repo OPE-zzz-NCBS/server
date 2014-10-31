@@ -9,4 +9,5 @@ import (
 func bootstrap() {
 	iface.GetDb = factory.GetMsSqlDb
 	iface.NewUserRepo = repo.NewMsSqlUserRepo
+	iface.NewClientRepo = repo.NewMsSqlClientRepo
 }
