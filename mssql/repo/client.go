@@ -14,26 +14,13 @@ func NewMsSqlClientRepo() iface.ClientRepo {
 }
 
 func (repo MsSqlClientRepo) FindAll(db *sql.DB, offset int, limit int) ([]*model.Client, error) {
-	var clients []*model.Client
+	query, err := Asset("mssql/repo/sql/client_FindAll.sql")
+	if err != nil {
+		return nil, err
+	}
 
-	var query =
-		"select id, name, client_type " +
-		"from ( " +
-		"	select *, " +
-		"		row_number() over (order by t.id asc) num " +
-		"	from ( " +
-		"		select id, first_name + ' ' + last_name name, 'PERSON' client_type " +
-		"		from dbo.Persons " +
-		"		union all " +
-		"		select id, name, 'COMPANY' from dbo.Corporates " +
-		"		union all " +
-		"		select id, name, 'GROUP' from dbo.Groups " +
-		"		union all " +
-		"		select id, name, 'VILLAGE_BANK' from dbo.Villages " +
-		"	) t " +
-		") t " +
-		"where t.num between ? and ?"
-	rows, err := db.Query(query, offset + 1, offset + limit)
+	var clients []*model.Client
+	rows, err := db.Query(string(query), offset + 1, offset + limit)
 	if err != nil {
 		return nil, err
 	}
