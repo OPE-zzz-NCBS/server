@@ -46,9 +46,12 @@ func (repo MsSqlUserRepo) FindAll(db *sql.DB, offset int, limit int) ([]*model.U
 }
 
 func (repo MsSqlUserRepo) FindById(db *sql.DB, id int) (*model.User, error) {
+	query, err := Asset("mssql/repo/sql/user_FindById.sql")
+	if err != nil {
+		return nil, err
+	}
 	user := model.NewUser()
-	var query = "select user_name, first_name, last_name from dbo.Users where id = ?"
-	err := db.QueryRow(query, id).Scan(&user.Username, &user.FirstName, &user.LastName)
+	err = db.QueryRow(string(query), id).Scan(&user.Username, &user.FirstName, &user.LastName)
 	if err == sql.ErrNoRows {
 		return nil, nil
 	}

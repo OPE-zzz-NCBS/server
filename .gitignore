@@ -1,3 +1,4 @@
 server
 conf.json
 *.pyc
+mssql/repo/sql.go
