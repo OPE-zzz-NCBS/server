@@ -13,17 +13,12 @@ func NewMsSqlUserRepo() iface.UserRepo {
 }
 
 func (repo MsSqlUserRepo) FindAll(db *sql.DB, offset int, limit int) ([]*model.User, error) {
+	query, err := Asset("mssql/repo/sql/user_FindAll.sql")
+	if err != nil {
+		return nil, err
+	}
 	var users []*model.User
-
-	var query =
-		"select id, user_name, first_name, last_name " +
-		"from (" +
-		"	select id, user_name, first_name, last_name, " +
-		"		row_number() over (order by id asc) num " +
-		"	from dbo.Users " +
-		") t " +
-		"where t.num between ? and ?"
-	rows, err := db.Query(query, offset + 1, offset + limit)
+	rows, err := db.Query(string(query), offset + 1, offset + limit)
 	if err != nil {
 		return nil, err
 	}
@@ -64,10 +59,12 @@ func (repo MsSqlUserRepo) FindById(db *sql.DB, id int) (*model.User, error) {
 }
 
 func (repo MsSqlUserRepo) FindByUsernameAndPassword(db *sql.DB, username string, password string) (*model.User, error) {
-
+	query, err := Asset("mssql/repo/sql/user_FindByUsernameAndPassword.sql")
+	if err != nil {
+		return nil, err
+	}
 	user := model.NewUser()
-	var query = "select id, first_name, last_name from dbo.Users where user_name = ? and user_pass = ?"
-	err := db.QueryRow(query, username, password).Scan(&user.Id, &user.FirstName, &user.LastName)
+	err = db.QueryRow(string(query), username, password).Scan(&user.Id, &user.FirstName, &user.LastName)
 	if err == sql.ErrNoRows {
 		return nil, nil
 	}
