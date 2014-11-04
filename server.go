@@ -23,6 +23,11 @@ func protected(fn func(w http.ResponseWriter, r *http.Request)) http.HandlerFunc
 	}
 }
 
+func home(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html;charset=utf-8")
+	w.Write([]byte("OPENCBS Server is running"))
+}
+
 func main() {
 	conf, err := config.Get()
 	if err != nil {
@@ -43,6 +48,7 @@ func main() {
 
 	// Set up routes
 	mux := routes.New()
+	mux.Get("/", home)
 	mux.Get("/api/users", protected(api.GetUsers))
 	mux.Get("/api/users/:id([0-9]+)", protected(api.GetUser))
 
