@@ -2,7 +2,7 @@ select id, name, client_type
 from (
 	select *, row_number() over (order by t.id asc) num
 	from (
-		select id, first_name + ' ' + last_name name, 'PERSON' client_type from dbo.Persons
+		select id, last_name + ', ' + first_name name, 'PERSON' client_type from dbo.Persons
 		union all 
 		select id, name, 'COMPANY' from dbo.Corporates
 		union all
