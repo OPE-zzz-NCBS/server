@@ -14,6 +14,7 @@ type UserRepo interface {
 }
 
 type ClientRepo interface {
+	GetCount(db *sql.DB) (int, error)
 	FindAll(db *sql.DB, offset int, limit int) ([]*model.Client, error)
 }
 

@@ -18,6 +18,7 @@ type Clients struct {
 	Href string `json:"href"`
 	Offset int `json:"offset"`
 	Limit int `json:"limit"`
+	Count int `json:"count"`
 	Items []*Client `json:"items"`
 }
 

@@ -1,6 +1,6 @@
 select id, name, client_type
 from (
-	select *, row_number() over (order by t.id asc) num
+	select *, row_number() over (order by t.name asc) num
 	from (
 		select id, last_name + ', ' + first_name name, 'PERSON' client_type from dbo.Persons
 		union all 

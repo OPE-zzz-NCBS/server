@@ -17,6 +17,7 @@ func GetClients(w http.ResponseWriter, r *http.Request) {
 	var clients *model.Clients
 	var offset int
 	var limit int
+	var count int = -1
 
 	db, err := iface.GetDb(r)
 	if err != nil {
@@ -31,10 +32,18 @@ func GetClients(w http.ResponseWriter, r *http.Request) {
 		goto Error
 	}
 
+	if util.GetIncludeCount(r) {
+		count, err = repo.GetCount(db)
+		if err != nil {
+			goto Error
+		}
+	}
+
 	clients = new(model.Clients)
 	clients.Href = util.GetClientsUrl(r)
 	clients.Offset = offset
 	clients.Limit = limit
+	clients.Count = count
 	clients.Items = items
 
 	js, err = json.MarshalIndent(clients, "", "  ")

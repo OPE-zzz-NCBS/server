@@ -23,3 +23,12 @@ func GetLimit(r *http.Request) int {
 	return limit
 }
 
+func GetIncludeCount(r *http.Request) bool {
+	text := r.URL.Query().Get("includeCount")
+	includeCount, err := strconv.ParseBool(text)
+	if err != nil {
+		return false
+	}
+	return includeCount
+}
+
