@@ -1,8 +1,9 @@
 package model
 
 type Session struct {
-	Token string
-	User *User
+	Token string `json:"token"`
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
 var sessions map[string]*Session = make(map[string]*Session)

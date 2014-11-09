@@ -24,15 +24,17 @@ func AddSession(w http.ResponseWriter, r *http.Request) {
 	var repo iface.UserRepo
 	var db *sql.DB
 	var user *model.User
-	var err error
 	var js []byte
 	var token string
-	var session *model.Session
+	var session model.Session
 
-	r.ParseForm()
-	username := r.FormValue("username")
-	password := r.FormValue("password")
-	if username == "" || password == "" {
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&session)
+	if err != nil {
+		goto Error
+	}
+
+	if session.Username == "" || session.Password == "" {
 		goto Unauthorized
 	}
 
@@ -43,7 +45,7 @@ func AddSession(w http.ResponseWriter, r *http.Request) {
 
 	// Find user
 	repo = iface.NewUserRepo()
-	user, err = repo.FindByUsernameAndPassword(db, username, password)
+	user, err = repo.FindByUsernameAndPassword(db, session.Username, session.Password)
 	if err != nil {
 		goto Error
 	}
@@ -59,8 +61,8 @@ func AddSession(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Cache session and return to the client
-	session = &model.Session{token, user}
-	model.SetSession(token, session)
+	session = model.Session{token, user.Username, ""}
+	model.SetSession(token, &session)
 	log.Printf("created a session for user \"%s\"", user.Username)
 
 	js, err = json.MarshalIndent(session, "", "  ")
@@ -76,6 +78,7 @@ Unauthorized:
 	return
 
 Error:
+	log.Println(err.Error())
 	http.Error(w, err.Error(), http.StatusInternalServerError)
 }
 
@@ -84,7 +87,7 @@ func DeleteSession(w http.ResponseWriter, r *http.Request) {
 	session := model.GetSession(token)
 	if session != nil {
 		model.DeleteSession(token)
-		log.Printf("deleted the session for user \"%s\"", session.User.Username)
+		log.Printf("deleted the session for user \"%s\"", session.Username)
 	}
 	w.WriteHeader(200)
 }
