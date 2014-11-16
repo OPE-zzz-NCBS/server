@@ -5,97 +5,86 @@ import (
 	"net/http"
 	"log"
 	"strconv"
-	"database/sql"
-	"github.com/OPENCBS/server/iface"
+	"github.com/OPENCBS/server/factory"
+	"github.com/OPENCBS/server/repo"
 	"github.com/OPENCBS/server/model"
 	"github.com/OPENCBS/server/util"
 )
 
-func GetUsers(w http.ResponseWriter, r *http.Request) {
-	var js []byte
-	var repo iface.UserRepo
-	var items []*model.User
-	var users *model.Users
-	var offset int
-	var limit int
+func fail(w http.ResponseWriter, err error) {
+	log.Println(err.Error())
+	http.Error(w, err.Error(), http.StatusInternalServerError)
+}
 
-	db, err := iface.GetDb(r)
+func GetUsers(w http.ResponseWriter, r *http.Request) {
+	db, err := factory.GetDb(r)
 	if err != nil {
-		goto Error
+		fail(w, err)
+		return
 	}
 
-	repo = iface.NewUserRepo()
-	offset = util.GetOffset(r)
-	limit = util.GetLimit(r)
-	items, err = repo.FindAll(db, offset, limit)
+	sqlProvider := factory.GetSqlProvider(r)
+	repo := repo.NewUserRepo(sqlProvider)
+	offset := util.GetOffset(r)
+	limit := util.GetLimit(r)
+	items, err := repo.GetAll(db, offset, limit)
 	if err != nil {
-		goto Error
+		fail(w, err)
+		return
 	}
 	for _, user := range items {
 		user.Href = util.GetUserUrl(r, user)
 	}
-	users = new(model.Users)
+	users := new(model.Users)
 	users.Href = util.GetUsersUrl(r)
 	users.Offset = offset
 	users.Limit = limit
 	users.Items = items
 
-	js, err = json.MarshalIndent(users, "", "  ")
+	js, err := json.MarshalIndent(users, "", "  ")
 	if err != nil {
-		goto Error
+		fail(w, err)
+		return
 	}
 
 	w.Header().Set("Content-Type", "application/json;charset=utf-8")
 	w.Write(js)
-	return
-
-Error:
-	log.Println(err.Error())
-	http.Error(w, err.Error(), http.StatusInternalServerError)
 }
 
 func GetUser(w http.ResponseWriter, r *http.Request) {
-	var js []byte
-	var repo iface.UserRepo
-	var user *model.User
-	var db *sql.DB
-
 	idString := r.URL.Query().Get(":id")
 	id, err := strconv.Atoi(idString)
 	if err != nil {
-		goto Error
+		fail(w, err)
+		return
 	}
 
-	db, err = iface.GetDb(r)
+	db, err := factory.GetDb(r)
 	if err != nil {
-		goto Error
+		fail(w, err)
+		return
 	}
 
-	repo = iface.NewUserRepo()
-	user, err = repo.FindById(db, id)
+	sqlProvider := factory.GetSqlProvider(r)
+	repo := repo.NewUserRepo(sqlProvider)
+	user, err := repo.GetById(db, id)
 	if err != nil {
-		goto Error
+		fail(w, err)
+		return
 	}
 	if user == nil {
-		goto NotFound
+		http.Error(w, "User not found", http.StatusNotFound)
+		return
 	}
 	user.Href = util.GetUserUrl(r, user)
 
-	js, err = json.MarshalIndent(user, "", "  ")
+	js, err := json.MarshalIndent(user, "", "  ")
 	if err != nil {
-		goto Error
+		fail(w, err)
+		return
 	}
 
 	w.Header().Set("Content-Type", "application/json;charset=utf-8")
 	w.Write(js)
-	return
-
-NotFound:
-	http.Error(w, "User not found", http.StatusNotFound)
-	return
-
-Error:
-	log.Println(err.Error())
-	http.Error(w, err.Error(), http.StatusInternalServerError)
 }
 

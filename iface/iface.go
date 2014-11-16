@@ -25,3 +25,8 @@ var GetDb func(r *http.Request) (*sql.DB, error)
 var NewUserRepo func() UserRepo 
 var NewClientRepo func() ClientRepo
 
+
+type SqlProvider interface {
+	GetSql(name string) (string, error)
+}
+
