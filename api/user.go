@@ -1,33 +1,18 @@
 package api
 
 import (
-	"encoding/json"
 	"net/http"
-	"log"
 	"strconv"
-	"github.com/OPENCBS/server/factory"
-	"github.com/OPENCBS/server/repo"
+	"github.com/OPENCBS/server/iface"
 	"github.com/OPENCBS/server/model"
 	"github.com/OPENCBS/server/util"
 )
 
-func fail(w http.ResponseWriter, err error) {
-	log.Println(err.Error())
-	http.Error(w, err.Error(), http.StatusInternalServerError)
-}
-
 func GetUsers(w http.ResponseWriter, r *http.Request) {
-	db, err := factory.GetDb(r)
-	if err != nil {
-		fail(w, err)
-		return
-	}
-
-	sqlProvider := factory.GetSqlProvider(r)
-	repo := repo.NewUserRepo(sqlProvider)
+	repo := iface.NewUserRepo()
 	offset := util.GetOffset(r)
 	limit := util.GetLimit(r)
-	items, err := repo.GetAll(db, offset, limit)
+	items, err := repo.GetAll(offset, limit)
 	if err != nil {
 		fail(w, err)
 		return
@@ -41,33 +26,14 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 	users.Limit = limit
 	users.Items = items
 
-	js, err := json.MarshalIndent(users, "", "  ")
-	if err != nil {
-		fail(w, err)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json;charset=utf-8")
-	w.Write(js)
+	sendJson(w, users)
 }
 
 func GetUser(w http.ResponseWriter, r *http.Request) {
 	idString := r.URL.Query().Get(":id")
-	id, err := strconv.Atoi(idString)
-	if err != nil {
-		fail(w, err)
-		return
-	}
-
-	db, err := factory.GetDb(r)
-	if err != nil {
-		fail(w, err)
-		return
-	}
-
-	sqlProvider := factory.GetSqlProvider(r)
-	repo := repo.NewUserRepo(sqlProvider)
-	user, err := repo.GetById(db, id)
+	id, _ := strconv.Atoi(idString)
+	repo := iface.NewUserRepo()
+	user, err := repo.GetById(id)
 	if err != nil {
 		fail(w, err)
 		return
@@ -78,13 +44,6 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	}
 	user.Href = util.GetUserUrl(r, user)
 
-	js, err := json.MarshalIndent(user, "", "  ")
-	if err != nil {
-		fail(w, err)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json;charset=utf-8")
-	w.Write(js)
+	sendJson(w, user)
 }
 

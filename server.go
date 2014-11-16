@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"github.com/drone/routes"
 	"github.com/OPENCBS/server/config"
-	"github.com/OPENCBS/server/iface"
 	"github.com/OPENCBS/server/api"
 	"github.com/OPENCBS/server/model"
 )
@@ -35,16 +34,6 @@ func main() {
 	}
 
 	bootstrap()
-
-	// Try to connect to the database
-	db, err := iface.GetDb(nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = db.Ping()
-	if err != nil {
-		log.Fatal(err)
-	}
 
 	// Set up routes
 	mux := routes.New()

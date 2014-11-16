@@ -2,7 +2,6 @@ package api
 
 import (
 	"net/http"
-	"database/sql"
 	"encoding/json"
 	"encoding/base64"
 	"crypto/rand"
@@ -21,43 +20,37 @@ func getRandomToken() (string, error) {
 }
 
 func AddSession(w http.ResponseWriter, r *http.Request) {
-	var repo iface.UserRepo
-	var db *sql.DB
-	var user *model.User
-	var js []byte
-	var token string
 	var session model.Session
-
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&session)
 	if err != nil {
-		goto Error
+		fail(w, err)
+		return
 	}
 
 	if session.Username == "" || session.Password == "" {
-		goto Unauthorized
-	}
-
-	db, err = iface.GetDb(r)
-	if err != nil {
-		goto Error
+		http.Error(w, "Invalid username or password", http.StatusUnauthorized)
+		return
 	}
 
 	// Find user
-	repo = iface.NewUserRepo()
-	user, err = repo.FindByUsernameAndPassword(db, session.Username, session.Password)
+	repo := iface.NewUserRepo()
+	user, err := repo.GetByUsernameAndPassword(session.Username, session.Password)
 	if err != nil {
-		goto Error
+		fail(w, err)
+		return
 	}
 
 	if user == nil {
-		goto Unauthorized
+		http.Error(w, "Invalid username or password", http.StatusUnauthorized)
+		return
 	}
 
 	// Create session
-	token, err = getRandomToken()
+	token, err := getRandomToken()
 	if err != nil {
-		goto Error
+		fail(w, err)
+		return
 	}
 
 	// Cache session and return to the client
@@ -65,21 +58,7 @@ func AddSession(w http.ResponseWriter, r *http.Request) {
 	model.SetSession(token, &session)
 	log.Printf("created a session for user \"%s\"", user.Username)
 
-	js, err = json.MarshalIndent(session, "", "  ")
-	if err != nil {
-		goto Error
-	}
-	w.Header().Set("Content-Type", "application/json;charset=utf-8")
-	w.Write(js)
-	return
-
-Unauthorized:
-	http.Error(w, "Invalid username or password", http.StatusUnauthorized)
-	return
-
-Error:
-	log.Println(err.Error())
-	http.Error(w, err.Error(), http.StatusInternalServerError)
+	sendJson(w, session)
 }
 
 func DeleteSession(w http.ResponseWriter, r *http.Request) {
@@ -91,4 +70,3 @@ func DeleteSession(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(200)
 }
-

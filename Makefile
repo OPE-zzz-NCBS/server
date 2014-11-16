@@ -1,6 +1,5 @@
 server: clean
-	go-bindata -pkg="repo" -o mssql/repo/sql.go mssql/repo/sql
-	go-bindata -pkg="sql_mssql" -o sql_mssql/sql_mssql.go sql_mssql
+	go-bindata -pkg="mssql" -o mssql/mssql.go mssql
 	go build .
 
 clean:

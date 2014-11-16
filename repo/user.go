@@ -2,36 +2,23 @@ package repo
 
 import (
 	"database/sql"
-	"github.com/OPENCBS/server/iface"
 	"github.com/OPENCBS/server/model"
 )
 
 type UserRepo struct {
-	sqlProvider iface.SqlProvider
+	GetSql func(name string) string
+	Db *sql.DB
 }
 
-func NewUserRepo(sqlProvider iface.SqlProvider) *UserRepo {
-	repo := new(UserRepo)
-	repo.sqlProvider = sqlProvider
-	return repo
-}
-
-func (repo UserRepo) getSql(name string) (string, error) {
-	return repo.sqlProvider.GetSql(name)
-}
-
-func (repo UserRepo) GetAll(db *sql.DB, offset int, limit int) ([]*model.User, error) {
-	query, err := repo.getSql("user_GetAll.sql")
-	if err != nil {
-		return nil, err
-	}
-	var users []*model.User
-	rows, err := db.Query(query, offset + 1, offset + limit)
+func (repo UserRepo) GetAll(offset int, limit int) ([]*model.User, error) {
+	query := repo.GetSql("user_GetAll.sql")
+	rows, err := repo.Db.Query(query, offset + 1, offset + limit)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
+	var users []*model.User
 	for rows.Next() {
 		user := model.NewUser()
 		err := rows.Scan(&user.Id, &user.Username, &user.FirstName, &user.LastName)
@@ -48,13 +35,10 @@ func (repo UserRepo) GetAll(db *sql.DB, offset int, limit int) ([]*model.User, e
 	return users, nil
 }
 
-func (repo UserRepo) GetById(db *sql.DB, id int) (*model.User, error) {
-	query, err := repo.getSql("user_GetById.sql")
-	if err != nil {
-		return nil, err
-	}
+func (repo UserRepo) GetById(id int) (*model.User, error) {
+	query := repo.GetSql("user_GetById.sql")
 	user := model.NewUser()
-	err = db.QueryRow(query, id).Scan(&user.Username, &user.FirstName, &user.LastName)
+	err := repo.Db.QueryRow(query, id).Scan(&user.Username, &user.FirstName, &user.LastName)
 	if err == sql.ErrNoRows {
 		return nil, nil
 	}
@@ -66,13 +50,10 @@ func (repo UserRepo) GetById(db *sql.DB, id int) (*model.User, error) {
 	return user, nil
 }
 
-func (repo UserRepo) GetByUsernameAndPassword(db *sql.DB, username string, password string) (*model.User, error) {
-	query, err := repo.getSql("user_GetByUsernameAndPassword.sql")
-	if err != nil {
-		return nil, err
-	}
+func (repo UserRepo) GetByUsernameAndPassword(username string, password string) (*model.User, error) {
+	query := repo.GetSql("user_GetByUsernameAndPassword.sql")
 	user := model.NewUser()
-	err = db.QueryRow(query, username, password).Scan(&user.Id, &user.FirstName, &user.LastName)
+	err := repo.Db.QueryRow(query, username, password).Scan(&user.Id, &user.FirstName, &user.LastName)
 	if err == sql.ErrNoRows {
 		return nil, nil
 	}

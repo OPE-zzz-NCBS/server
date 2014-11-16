@@ -3,28 +3,26 @@ package factory
 import (
 	"fmt"
 	"path"
-	"net/http"
+	"log"
 	"database/sql"
 	_ "github.com/denisenkom/go-mssqldb"
 	"github.com/OPENCBS/server/config"
-	"github.com/OPENCBS/server/iface"
-	"github.com/OPENCBS/server/sql_mssql"
+	"github.com/OPENCBS/server/repo"
+	"github.com/OPENCBS/server/mssql"
 )
-
-type MsSqlSqlProvider struct {
-}
 
 var db *sql.DB
 
-func GetMsSqlDb(r *http.Request) (*sql.DB, error) {
+func getDb() *sql.DB {
 	if db != nil {
-		return db, nil
+		return db
 	}
 
 	var conf *config.Configuration
 	conf, err := config.Get()
 	if err != nil {
-		return nil, err
+		log.Fatal(err)
+		return nil
 	}
 
 	template := "server=%s;user id=%s;password=%s;database=%s;connection timeout=5"
@@ -34,23 +32,34 @@ func GetMsSqlDb(r *http.Request) (*sql.DB, error) {
 		conf.Database.Password,
 		conf.Database.Name)
 	db, err = sql.Open("mssql", connString)
-	return db, err
-}
-
-func GetDb(r *http.Request) (*sql.DB, error) {
-	return GetMsSqlDb(r)
-}
-
-func GetSqlProvider(r *http.Request) iface.SqlProvider {
-	return new(MsSqlSqlProvider)
-}
-
-func (sqlProvider MsSqlSqlProvider) GetSql(name string) (string, error) {
-	path := path.Join("sql_mssql", name)
-	sql, err := sql_mssql.Asset(path)
 	if err != nil {
-		return "", err
+		log.Fatal(err)
+		return nil
 	}
-	return string(sql), nil
+	return db
+}
+
+func getSql(name string) string {
+	path := path.Join("mssql", name)
+	sql, err := mssql.Asset(path)
+	if err != nil {
+		log.Fatal(err)
+		return ""
+	}
+	return string(sql)
+}
+
+func NewUserRepo() *repo.UserRepo {
+	repo := new(repo.UserRepo)
+	repo.GetSql = getSql
+	repo.Db = getDb()
+	return repo
+}
+
+func NewClientRepo() *repo.ClientRepo {
+	repo := new(repo.ClientRepo)
+	repo.GetSql = getSql
+	repo.Db = getDb()
+	return repo
 }
 
