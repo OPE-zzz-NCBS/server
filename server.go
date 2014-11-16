@@ -55,7 +55,7 @@ func main() {
 	mux.Post("/api/sessions", api.AddSession)
 	mux.Del("/api/sessions", protected(api.DeleteSession))
 
-	mux.Get("/api/clients", api.GetClients)
+	mux.Get("/api/clients", protected(api.GetClients))
 
 	http.Handle("/", mux)
 	log.Println("OPENCBS Server")

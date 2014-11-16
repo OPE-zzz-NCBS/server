@@ -18,6 +18,7 @@ func GetClients(w http.ResponseWriter, r *http.Request) {
 	var offset int
 	var limit int
 	var count int = -1
+	var query string = ""
 
 	db, err := iface.GetDb(r)
 	if err != nil {
@@ -27,13 +28,22 @@ func GetClients(w http.ResponseWriter, r *http.Request) {
 	repo = iface.NewClientRepo()
 	offset = util.GetOffset(r)
 	limit = util.GetLimit(r)
-	items, err = repo.FindAll(db, offset, limit)
+	query = r.URL.Query().Get("query")
+	if query != "" {
+		items, err = repo.Search(db, query, offset, limit)
+	} else {
+		items, err = repo.FindAll(db, offset, limit)
+	}
 	if err != nil {
 		goto Error
 	}
 
 	if util.GetIncludeCount(r) {
-		count, err = repo.GetCount(db)
+		if query != "" {
+			count, err = repo.GetSearchCount(db, query)
+		} else {
+			count, err = repo.GetCount(db)
+		}
 		if err != nil {
 			goto Error
 		}

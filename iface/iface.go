@@ -16,6 +16,8 @@ type UserRepo interface {
 type ClientRepo interface {
 	GetCount(db *sql.DB) (int, error)
 	FindAll(db *sql.DB, offset int, limit int) ([]*model.Client, error)
+	Search(db *sql.DB, query string, offset int, limit int) ([]*model.Client, error)
+	GetSearchCount(db *sql.DB, query string) (int, error)
 }
 
 var GetDb func(r *http.Request) (*sql.DB, error)
