@@ -63,3 +63,17 @@ func NewClientRepo() *repo.ClientRepo {
 	return repo
 }
 
+func NewPersonRepo() *repo.PersonRepo {
+	repo := new(repo.PersonRepo)
+	repo.GetSql = getSql
+	repo.Db = getDb()
+	return repo
+}
+
+func NewActivityRepo() *repo.ActivityRepo {
+	repo := new(repo.ActivityRepo)
+	repo.GetSql = getSql
+	repo.Db = getDb()
+	return repo
+}
+

@@ -45,6 +45,10 @@ func main() {
 	mux.Del("/api/sessions", protected(api.DeleteSession))
 
 	mux.Get("/api/clients", protected(api.GetClients))
+	mux.Get("/api/people/:id([0-9]+)", api.GetPerson)
+
+	mux.Get("/api/lookupdata", api.GetLookupData)
+	mux.Get("/api/activities", api.GetActivities)
 
 	http.Handle("/", mux)
 	log.Println("OPENCBS Server")

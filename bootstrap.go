@@ -8,4 +8,6 @@ import (
 func bootstrap() {
 	iface.NewUserRepo = factory.NewUserRepo
 	iface.NewClientRepo = factory.NewClientRepo
+	iface.NewPersonRepo = factory.NewPersonRepo
+	iface.NewActivityRepo = factory.NewActivityRepo
 }

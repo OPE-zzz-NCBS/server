@@ -1,12 +1,5 @@
 package model
 
-const (
-	Person = "PERSON"
-	Company = "COMPANY"
-	Group = "GROUP"
-	VillageBank = "VILLAGE_BANK"
-)
-
 type Client struct {
 	Href string `json:"href"`
 	Id int `json:"id"`
