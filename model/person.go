@@ -1,21 +1,17 @@
 package model
 
-type Field struct {
-	Name string `json:"name"`
-	DataType string `json:"dataType"`
-	Caption string `json:"caption"`
-	Value string `json:"value"`
-	Extra interface{} `json:"extra"`
-}
-
 type Person struct {
 	Href string `json:"href"`
 	Id int `json:"id"`
-	Fields []*Field `json:"fields"`
-}
-
-func NewField() *Field {
-	return new(Field)
+	FirstName string `json:"firstName"`
+	LastName string `json:"lastName"`
+	FatherName string `json:"fatherName"`
+	Sex string `json:"sex"`
+	BirthDate string `json:"birthDate"`
+	BirthPlace string `json:"birthPlace"`
+	IdentificationData string `json:"identificationData"`
+	Nationality string `json:"nationality"`
+	ActivityId int `json:"activityId"`
 }
 
 func NewPerson() *Person {
