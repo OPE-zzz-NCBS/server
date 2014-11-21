@@ -49,6 +49,7 @@ func main() {
 
 	mux.Get("/api/lookupdata", api.GetLookupData)
 	mux.Get("/api/activities", api.GetActivities)
+	mux.Get("/api/branches", api.GetBranches)
 
 	http.Handle("/", mux)
 	log.Println("OPENCBS Server")

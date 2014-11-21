@@ -12,7 +12,6 @@ func GetActivities(w http.ResponseWriter, r *http.Request) {
 		fail(w, err)
 		return
 	}
-	
 	sendJson(w, activities)
 }
 

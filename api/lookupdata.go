@@ -14,8 +14,16 @@ func GetLookupData(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	branchRepo := iface.NewBranchRepo()
+	branches, err := branchRepo.GetAll()
+	if err != nil {
+		fail(w, err)
+		return
+	}
+
 	lookupData := model.NewLookupData()
 	lookupData.Activities = activities
+	lookupData.Branches = branches
 
 	sendJson(w, lookupData)
 }

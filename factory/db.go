@@ -77,3 +77,10 @@ func NewActivityRepo() *repo.ActivityRepo {
 	return repo
 }
 
+func NewBranchRepo() *repo.BranchRepo {
+	repo := new(repo.BranchRepo)
+	repo.GetSql = getSql
+	repo.Db = getDb()
+	return repo
+}
+

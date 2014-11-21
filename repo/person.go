@@ -23,6 +23,7 @@ func (repo PersonRepo) GetById(id int) (*model.Person, error) {
 		&person.IdentificationData,
 		&person.Nationality,
 		&person.ActivityId,
+		&person.BranchId,
 	)
 	if err == sql.ErrNoRows {
 		return nil, nil
