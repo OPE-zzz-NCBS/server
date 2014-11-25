@@ -51,6 +51,8 @@ func main() {
 	mux.Get("/api/activities", api.GetActivities)
 	mux.Get("/api/branches", api.GetBranches)
 
+	mux.Get("/api/cities", api.GetCities)
+
 	http.Handle("/", mux)
 	log.Println("OPENCBS Server")
 	addr := fmt.Sprintf(":%d", conf.Server.Port)

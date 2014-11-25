@@ -21,9 +21,17 @@ func GetLookupData(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	cityRepo := iface.NewCityRepo()
+	cities, err := cityRepo.GetAll()
+	if err != nil {
+		fail(w, err)
+		return
+	}
+
 	lookupData := model.NewLookupData()
 	lookupData.Activities = activities
 	lookupData.Branches = branches
+	lookupData.Cities = cities
 
 	sendJson(w, lookupData)
 }

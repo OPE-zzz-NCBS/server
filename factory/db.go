@@ -84,3 +84,10 @@ func NewBranchRepo() *repo.BranchRepo {
 	return repo
 }
 
+func NewCityRepo() *repo.CityRepo {
+	repo := new(repo.CityRepo)
+	repo.GetSql = getSql
+	repo.Db = getDb()
+	return repo
+}
+
