@@ -24,6 +24,7 @@ func (repo PersonRepo) GetById(id int) (*model.Person, error) {
 		&person.Nationality,
 		&person.ActivityId,
 		&person.BranchId,
+		&person.CityId,
 	)
 	if err == sql.ErrNoRows {
 		return nil, nil
