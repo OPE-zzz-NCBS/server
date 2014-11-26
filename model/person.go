@@ -14,6 +14,11 @@ type Person struct {
 	ActivityId int `json:"activityId"`
 	BranchId int `json:"branchId"`
 	CityId int `json:"cityId"`
+	Address string `json:"address"`
+	PostalCode string `json:"postalCode"`
+	HomePhone string `json:"homePhone"`
+	PersonalPhone string `json:"personalPhone"`
+	Email string `json:"email"`
 }
 
 func NewPerson() *Person {

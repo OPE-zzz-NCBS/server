@@ -6,7 +6,11 @@ select p.first_name, p.last_name, isnull(p.father_name, '') father_name,
     isnull(p.nationality, '') nationality,
     p.activity_id,
     t.branch_id,
-    isnull(c.id, 0) city_id
+    isnull(c.id, 0) city_id,
+    isnull(t.address, '') address,
+    isnull(t.zipCode, '') postal_code,
+    isnull(t.home_phone, '') home_phone,
+    isnull(t.personal_phone, '') personal_phone
 from dbo.Persons p
 left join dbo.Tiers t on t.id = p.id
 left join dbo.City c on c.name = t.city
