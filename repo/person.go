@@ -24,11 +24,14 @@ func (repo PersonRepo) GetById(id int) (*model.Person, error) {
 		&person.Nationality,
 		&person.ActivityId,
 		&person.BranchId,
-		&person.CityId,
-		&person.Address,
-		&person.PostalCode,
 		&person.HomePhone,
 		&person.PersonalPhone,
+		&person.Address1.CityId,
+		&person.Address1.Address,
+		&person.Address1.PostalCode,
+		&person.Address2.CityId,
+		&person.Address2.Address,
+		&person.Address2.PostalCode,
 	)
 	if err == sql.ErrNoRows {
 		return nil, nil

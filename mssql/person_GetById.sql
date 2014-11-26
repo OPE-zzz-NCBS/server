@@ -6,14 +6,20 @@ select p.first_name, p.last_name, isnull(p.father_name, '') father_name,
     isnull(p.nationality, '') nationality,
     p.activity_id,
     t.branch_id,
-    isnull(c.id, 0) city_id,
-    isnull(t.address, '') address,
-    isnull(t.zipCode, '') postal_code,
     isnull(t.home_phone, '') home_phone,
-    isnull(t.personal_phone, '') personal_phone
+    isnull(t.personal_phone, '') personal_phone,
+    isnull(c1.id, 0) city_id1,
+    isnull(t.address, '') address1,
+    isnull(t.zipCode, '') postal_code1,
+    isnull(c2.id, 0) city_id2,
+    isnull(t.secondary_address, '') address2,
+    isnull(t.secondary_zipCode, '') postal_code2
 from dbo.Persons p
 left join dbo.Tiers t on t.id = p.id
-left join dbo.City c on c.name = t.city
-    and c.district_id = t.district_id
-    and c.deleted = 0
+left join dbo.City c1 on c1.name = t.city
+    and c1.district_id = t.district_id
+    and c1.deleted = 0
+left join dbo.City c2 on c2.name = t.secondary_city
+    and c2.district_id = t.secondary_district_id
+    and c2.deleted = 0
 where p.id = ?
