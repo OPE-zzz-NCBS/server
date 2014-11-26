@@ -11,4 +11,4 @@ var NewActivityRepo func() *repo.ActivityRepo
 var NewBranchRepo func() *repo.BranchRepo
 var NewCityRepo func() *repo.CityRepo
 var NewDistrictRepo func() *repo.DistrictRepo
-
+var NewRegionRepo func() *repo.RegionRepo

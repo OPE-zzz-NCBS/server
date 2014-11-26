@@ -6,6 +6,7 @@ type LookupData struct {
 	Branches []*Branch `json:"branches"`
 	Cities []*City `json:"cities"`
 	Districts []*District `json:"districts"`
+	Regions []*Region `json:"regions"`
 }
 
 func NewLookupData() *LookupData {

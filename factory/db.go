@@ -98,3 +98,10 @@ func NewDistrictRepo() *repo.DistrictRepo {
 	return repo
 }
 
+func NewRegionRepo() *repo.RegionRepo {
+	repo := new(repo.RegionRepo)
+	repo.GetSql = getSql
+	repo.Db = getDb()
+	return repo
+}
+

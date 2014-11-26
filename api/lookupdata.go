@@ -35,11 +35,19 @@ func GetLookupData(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	regionRepo := iface.NewRegionRepo()
+	regions, err := regionRepo.GetAll()
+	if err != nil {
+		fail(w, err)
+		return
+	}
+
 	lookupData := model.NewLookupData()
 	lookupData.Activities = activities
 	lookupData.Branches = branches
 	lookupData.Cities = cities
 	lookupData.Districts = districts
+	lookupData.Regions = regions
 
 	sendJson(w, lookupData)
 }

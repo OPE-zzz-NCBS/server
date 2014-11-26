@@ -13,4 +13,5 @@ func bootstrap() {
 	iface.NewBranchRepo = factory.NewBranchRepo
 	iface.NewCityRepo = factory.NewCityRepo
 	iface.NewDistrictRepo = factory.NewDistrictRepo
+	iface.NewRegionRepo = factory.NewRegionRepo
 }
