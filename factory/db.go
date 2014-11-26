@@ -91,3 +91,10 @@ func NewCityRepo() *repo.CityRepo {
 	return repo
 }
 
+func NewDistrictRepo() *repo.DistrictRepo {
+	repo := new(repo.DistrictRepo)
+	repo.GetSql = getSql
+	repo.Db = getDb()
+	return repo
+}
+
