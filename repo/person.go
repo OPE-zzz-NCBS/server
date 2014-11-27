@@ -40,7 +40,47 @@ func (repo PersonRepo) GetById(id int) (*model.Person, error) {
 	if err != nil {
 		return nil, err
 	}
+	customInformation, err := repo.getCustomInformation(id)
+	if err != nil {
+		return nil, err
+	}
 	person.Id = id
+	person.CustomInformation = customInformation
 	return person, nil
+}
+
+func (repo PersonRepo) getCustomInformation(id int) ([]*model.CustomFieldValue, error) {
+	query := repo.GetSql("person_GetCustomInformation.sql")
+	var values []*model.CustomFieldValue
+	rows, err := repo.Db.Query(query, id)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		value := model.NewCustomFieldValue()
+		err  = rows.Scan(
+			&value.Field.Id,
+			&value.Field.Caption,
+			&value.Field.Type,
+			&value.Field.Owner,
+			&value.Field.Tab,
+			&value.Field.Unique,
+			&value.Field.Mandatory,
+			&value.Field.Order,
+			&value.Field.Extra,
+			&value.Value,
+		)
+		if err != nil {
+			return nil, err
+		}
+		values = append(values, value)
+	}
+	err = rows.Err()
+	if err != nil {
+		return nil, err
+	}
+	return values, nil
 }
 

@@ -24,6 +24,7 @@ type Person struct {
 	Email string `json:"email"`
 	Address1 *Address `json:"address1"`
 	Address2 *Address `json:"address2"`
+	CustomInformation []*CustomFieldValue `json:"customInformation"`
 }
 
 func NewPerson() *Person {
