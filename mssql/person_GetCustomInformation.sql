@@ -9,6 +9,11 @@ select cf.id,
     isnull(cf.extra, '') extra,
     isnull(cfv.value, '') value
 from dbo.CustomFields cf
-left join dbo.CustomFieldsValues cfv on cfv.field_id = cf.id and cf.owner = 'Person'
-where cfv.owner_id = ?
+left join
+(
+    select value, field_id
+    from dbo.CustomFieldsValues
+    where owner_id = ?
+) cfv on cfv.field_id = cf.id
+where cf.owner = 'Person' and cf.deleted = 0
 order by cf.[order]
