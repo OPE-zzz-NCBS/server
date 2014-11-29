@@ -1,18 +1,26 @@
 package repo
 
 import (
-	"database/sql"
 	"github.com/OPENCBS/server/model"
+	"github.com/OPENCBS/server/app"
 )
 
 type ActivityRepo struct {
-	GetSql func(name string) string
-	Db *sql.DB
+	dbProvider *app.DbProvider
+}
+
+func NewActivityRepo(dbProvider *app.DbProvider) *ActivityRepo {
+	repo := new(ActivityRepo)
+	repo.dbProvider = dbProvider
+	return repo
 }
 
 func (repo ActivityRepo) GetAll() ([]*model.Activity, error) {
-	query := repo.GetSql("activity_GetAll.sql")
-	rows, err := repo.Db.Query(query)
+	query, err := repo.dbProvider.GetSql("activity_GetAll.sql")
+	if err != nil {
+		return nil, err
+	}
+	rows, err := repo.dbProvider.Db.Query(query)
 	if err != nil {
 		return nil, err
 	}

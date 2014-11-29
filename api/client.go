@@ -2,13 +2,14 @@ package api
 
 import (
 	"net/http"
-	"github.com/OPENCBS/server/iface"
+	"github.com/OPENCBS/server/repo"
 	"github.com/OPENCBS/server/model"
 	"github.com/OPENCBS/server/util"
+	"github.com/OPENCBS/server/app"
 )
 
-func GetClients(w http.ResponseWriter, r *http.Request) {
-	repo := iface.NewClientRepo()
+func GetClients(ctx *app.AppContext, w http.ResponseWriter, r *http.Request) {
+	repo := repo.NewClientRepo(ctx.DbProvider)
 	offset := util.GetOffset(r)
 	limit := util.GetLimit(r)
 	query := r.URL.Query().Get("query")

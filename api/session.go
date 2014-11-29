@@ -6,8 +6,9 @@ import (
 	"encoding/base64"
 	"crypto/rand"
 	"log"
-	"github.com/OPENCBS/server/iface"
+	"github.com/OPENCBS/server/app"
 	"github.com/OPENCBS/server/model"
+	"github.com/OPENCBS/server/repo"
 )
 
 func getRandomToken() (string, error) {
@@ -19,7 +20,7 @@ func getRandomToken() (string, error) {
 	return base64.StdEncoding.EncodeToString(rb), nil
 }
 
-func AddSession(w http.ResponseWriter, r *http.Request) {
+func AddSession(ctx *app.AppContext, w http.ResponseWriter, r *http.Request) {
 	var session model.Session
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&session)
@@ -34,7 +35,7 @@ func AddSession(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Find user
-	repo := iface.NewUserRepo()
+	repo := repo.NewUserRepo(ctx.DbProvider)
 	user, err := repo.GetByUsernameAndPassword(session.Username, session.Password)
 	if err != nil {
 		fail(w, err)
@@ -61,7 +62,7 @@ func AddSession(w http.ResponseWriter, r *http.Request) {
 	sendJson(w, session)
 }
 
-func DeleteSession(w http.ResponseWriter, r *http.Request) {
+func DeleteSession(ctx *app.AppContext, w http.ResponseWriter, r *http.Request) {
 	token := r.Header.Get("X-Access-Token")
 	session := model.GetSession(token)
 	if session != nil {

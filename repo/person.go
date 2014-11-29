@@ -3,17 +3,26 @@ package repo
 import (
 	"database/sql"
 	"github.com/OPENCBS/server/model"
+	"github.com/OPENCBS/server/app"
 )
 
 type PersonRepo struct {
-	GetSql func(name string) string
-	Db *sql.DB
+	dbProvider *app.DbProvider
+}
+
+func NewPersonRepo(dbProvider *app.DbProvider) *PersonRepo {
+	repo := new(PersonRepo)
+	repo.dbProvider = dbProvider
+	return repo
 }
 
 func (repo PersonRepo) GetById(id int) (*model.Person, error) {
-	query := repo.GetSql("person_GetById.sql")
+	query, err := repo.dbProvider.GetSql("person_GetById.sql")
+	if err != nil {
+		return nil, err
+	}
 	person := model.NewPerson()
-	err := repo.Db.QueryRow(query, id).Scan(
+	err = repo.dbProvider.Db.QueryRow(query, id).Scan(
 		&person.FirstName,
 		&person.LastName,
 		&person.FatherName,
@@ -50,9 +59,12 @@ func (repo PersonRepo) GetById(id int) (*model.Person, error) {
 }
 
 func (repo PersonRepo) getCustomInformation(id int) ([]*model.CustomFieldValue, error) {
-	query := repo.GetSql("person_GetCustomInformation.sql")
+	query, err := repo.dbProvider.GetSql("person_GetCustomInformation.sql")
+	if err != nil {
+		return nil, err
+	}
 	var values []*model.CustomFieldValue
-	rows, err := repo.Db.Query(query, id)
+	rows, err := repo.dbProvider.Db.Query(query, id)
 	if err != nil {
 		return nil, err
 	}

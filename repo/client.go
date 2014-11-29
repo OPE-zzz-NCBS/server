@@ -1,19 +1,27 @@
 package repo
 
 import (
-	"database/sql"
 	"github.com/OPENCBS/server/model"
+	"github.com/OPENCBS/server/app"
 )
 
 type ClientRepo struct {
-	GetSql func(name string) string
-	Db *sql.DB
+	dbProvider *app.DbProvider
+}
+
+func NewClientRepo(dbProvider *app.DbProvider) *ClientRepo {
+	repo := new(ClientRepo)
+	repo.dbProvider = dbProvider
+	return repo
 }
 
 func (repo ClientRepo) GetCount() (int, error) {
-	query := repo.GetSql("client_GetCount.sql")
+	query, err := repo.dbProvider.GetSql("client_GetCount.sql")
+	if err != nil {
+		return -1, nil
+	}
 	var count int
-	err := repo.Db.QueryRow(query).Scan(&count)
+	err = repo.dbProvider.Db.QueryRow(query).Scan(&count)
 	if err != nil {
 		return -1, err
 	}
@@ -21,9 +29,12 @@ func (repo ClientRepo) GetCount() (int, error) {
 }
 
 func (repo ClientRepo) GetSearchCount(search string) (int, error) {
-	query := repo.GetSql("client_GetSearchCount.sql")
+	query, err := repo.dbProvider.GetSql("client_GetSearchCount.sql")
+	if err != nil {
+		return -1, err
+	}
 	var count int
-	err := repo.Db.QueryRow(query, search).Scan(&count)
+	err = repo.dbProvider.Db.QueryRow(query, search).Scan(&count)
 	if err != nil {
 		return -1, err
 	}
@@ -31,9 +42,12 @@ func (repo ClientRepo) GetSearchCount(search string) (int, error) {
 }
 
 func (repo ClientRepo) GetAll(offset int, limit int) ([]*model.Client, error) {
-	query := repo.GetSql("client_GetAll.sql")
+	query, err := repo.dbProvider.GetSql("client_GetAll.sql")
+	if err != nil {
+		return nil, err
+	}
 	var clients []*model.Client
-	rows, err := repo.Db.Query(query, offset + 1, offset + limit)
+	rows, err := repo.dbProvider.Db.Query(query, offset + 1, offset + limit)
 	if err != nil {
 		return nil, err
 	}
@@ -55,9 +69,12 @@ func (repo ClientRepo) GetAll(offset int, limit int) ([]*model.Client, error) {
 }
 
 func (repo ClientRepo) Search(search string, offset int, limit int) ([]*model.Client, error) {
-	query := repo.GetSql("client_Search.sql")
+	query, err := repo.dbProvider.GetSql("client_Search.sql")
+	if err != nil {
+		return nil, err
+	}
 	var clients []*model.Client
-	rows, err := repo.Db.Query(query, search, offset + 1, offset + limit)
+	rows, err := repo.dbProvider.Db.Query(query, search, offset + 1, offset + limit)
 	if err != nil {
 		return nil, err
 	}

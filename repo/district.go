@@ -1,19 +1,27 @@
 package repo
 
 import (
-	"database/sql"
 	"github.com/OPENCBS/server/model"
+	"github.com/OPENCBS/server/app"
 )
 
 type DistrictRepo struct {
-	GetSql func(name string) string
-	Db *sql.DB
+	dbProvider *app.DbProvider
+}
+
+func NewDistrictRepo(dbProvider *app.DbProvider) *DistrictRepo {
+	repo := new(DistrictRepo)
+	repo.dbProvider = dbProvider
+	return repo
 }
 
 func (repo DistrictRepo) GetAll() ([]*model.District, error) {
-	query := repo.GetSql("district_GetAll.sql")
+	query, err := repo.dbProvider.GetSql("district_GetAll.sql")
+	if err != nil {
+		return nil, err
+	}
 	var districts []*model.District
-	rows, err := repo.Db.Query(query)
+	rows, err := repo.dbProvider.Db.Query(query)
 	if err != nil {
 		return nil, err
 	}

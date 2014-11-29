@@ -3,13 +3,17 @@ package api
 import (
 	"net/http"
 	"strconv"
-	"github.com/OPENCBS/server/iface"
+	
+	"github.com/gorilla/mux"
+
+	"github.com/OPENCBS/server/repo"
 	"github.com/OPENCBS/server/model"
 	"github.com/OPENCBS/server/util"
+	"github.com/OPENCBS/server/app"
 )
 
-func GetUsers(w http.ResponseWriter, r *http.Request) {
-	repo := iface.NewUserRepo()
+func GetUsers(ctx *app.AppContext, w http.ResponseWriter, r *http.Request) {
+	repo := repo.NewUserRepo(ctx.DbProvider)
 	offset := util.GetOffset(r)
 	limit := util.GetLimit(r)
 	items, err := repo.GetAll(offset, limit)
@@ -29,10 +33,10 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 	sendJson(w, users)
 }
 
-func GetUser(w http.ResponseWriter, r *http.Request) {
-	idString := r.URL.Query().Get(":id")
+func GetUser(ctx *app.AppContext, w http.ResponseWriter, r *http.Request) {
+	idString := mux.Vars(r)["id"]
 	id, _ := strconv.Atoi(idString)
-	repo := iface.NewUserRepo()
+	repo := repo.NewUserRepo(ctx.DbProvider)
 	user, err := repo.GetById(id)
 	if err != nil {
 		fail(w, err)

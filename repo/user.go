@@ -3,16 +3,25 @@ package repo
 import (
 	"database/sql"
 	"github.com/OPENCBS/server/model"
+	"github.com/OPENCBS/server/app"
 )
 
 type UserRepo struct {
-	GetSql func(name string) string
-	Db *sql.DB
+	dbProvider *app.DbProvider
+}
+
+func NewUserRepo(dbProvider *app.DbProvider) *UserRepo {
+	repo := new(UserRepo)
+	repo.dbProvider = dbProvider
+	return repo
 }
 
 func (repo UserRepo) GetAll(offset int, limit int) ([]*model.User, error) {
-	query := repo.GetSql("user_GetAll.sql")
-	rows, err := repo.Db.Query(query, offset + 1, offset + limit)
+	query, err := repo.dbProvider.GetSql("user_GetAll.sql")
+	if err != nil {
+		return nil, err
+	}
+	rows, err := repo.dbProvider.Db.Query(query, offset + 1, offset + limit)
 	if err != nil {
 		return nil, err
 	}
@@ -36,9 +45,12 @@ func (repo UserRepo) GetAll(offset int, limit int) ([]*model.User, error) {
 }
 
 func (repo UserRepo) GetById(id int) (*model.User, error) {
-	query := repo.GetSql("user_GetById.sql")
+	query, err := repo.dbProvider.GetSql("user_GetById.sql")
+	if err != nil {
+		return nil, err
+	}
 	user := model.NewUser()
-	err := repo.Db.QueryRow(query, id).Scan(&user.Username, &user.FirstName, &user.LastName)
+	err = repo.dbProvider.Db.QueryRow(query, id).Scan(&user.Username, &user.FirstName, &user.LastName)
 	if err == sql.ErrNoRows {
 		return nil, nil
 	}
@@ -51,9 +63,12 @@ func (repo UserRepo) GetById(id int) (*model.User, error) {
 }
 
 func (repo UserRepo) GetByUsernameAndPassword(username string, password string) (*model.User, error) {
-	query := repo.GetSql("user_GetByUsernameAndPassword.sql")
+	query, err := repo.dbProvider.GetSql("user_GetByUsernameAndPassword.sql")
+	if err != nil {
+		return nil, err
+	}
 	user := model.NewUser()
-	err := repo.Db.QueryRow(query, username, password).Scan(&user.Id, &user.FirstName, &user.LastName)
+	err = repo.dbProvider.Db.QueryRow(query, username, password).Scan(&user.Id, &user.FirstName, &user.LastName)
 	if err == sql.ErrNoRows {
 		return nil, nil
 	}
