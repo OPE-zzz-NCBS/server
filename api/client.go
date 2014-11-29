@@ -1,50 +1,61 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 	"github.com/OPENCBS/server/repo"
 	"github.com/OPENCBS/server/model"
-	"github.com/OPENCBS/server/util"
 	"github.com/OPENCBS/server/app"
 )
 
 func GetClients(ctx *app.AppContext, w http.ResponseWriter, r *http.Request) {
-	repo := repo.NewClientRepo(ctx.DbProvider)
-	offset := util.GetOffset(r)
-	limit := util.GetLimit(r)
-	query := r.URL.Query().Get("query")
-	var items []*model.Client
-	var err error
-	if query != "" {
-		items, err = repo.Search(query, offset, limit)
-	} else {
-		items, err = repo.GetAll(offset, limit)
-	}
+	from, to, err := app.GetRange("clients", r)
 	if err != nil {
-		fail(w, err)
+		apiError := &app.ApiError{"Requested range is not valid.", err.Error(), ""}
+		sendJsonWithStatus(w, apiError, http.StatusRequestedRangeNotSatisfiable)
 		return
 	}
 
-	count := -1
-	if util.GetIncludeCount(r) {
-		if query != "" {
-			count, err = repo.GetSearchCount(query)
-		} else {
-			count, err = repo.GetCount()
-		}
+	repo := repo.NewClientRepo(ctx.DbProvider)
+	query := r.URL.Query().Get("query")
+	var clients []*model.Client
+	var contentRange string
+	var status int
+	count := 0
+
+	if query != "" {
+		clients, err = repo.Search(query, from, to)
+	} else {
+		count, err = repo.GetAllCount()
 		if err != nil {
-			fail(w, err)
-			return
+			goto Error
+		}
+		if from == -1 {
+			clients, err = repo.GetAll()
+			if err != nil {
+				goto Error
+			}
+		} else {
+			clients, err = repo.GetRange(from, to)
 		}
 	}
 
-	clients := new(model.Clients)
-	clients.Href = util.GetClientsUrl(r)
-	clients.Offset = offset
-	clients.Limit = limit
-	clients.Count = count
-	clients.Items = items
+	if from == -1 {
+		status = http.StatusOK
+		from = 0
+	} else {
+		status = http.StatusPartialContent
+	}
 
-	sendJson(w, clients)
+	to = from + len(clients) - 1
+	contentRange = fmt.Sprintf("clients %d..%d/%d", from, to, count)
+	w.Header().Set("Accept-Range", "clients")
+	w.Header().Set("Content-Range", contentRange)
+	sendJsonWithStatus(w, clients, status)
+	return
+
+Error:
+	apiError := &app.ApiError{"Internal server error.", err.Error(), ""}
+	sendJsonWithStatus(w, apiError, http.StatusInternalServerError)
 }
 

@@ -29,7 +29,7 @@ func loggingHandler(next http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("\n%s %s %s\n", r.Method, r.URL.String(), r.Proto)
 		for k, v := range r.Header {
-			fmt.Printf("%s: %s\n", k, v)
+			fmt.Printf("%s: %s\n", k, v[0])
 		}
 		next.ServeHTTP(w, r)
 	}
