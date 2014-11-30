@@ -95,13 +95,39 @@ func (repo ClientRepo) GetRange(from int, to int) ([]*model.Client, error) {
 	return clients, nil
 }
 
-func (repo ClientRepo) Search(search string, offset int, limit int) ([]*model.Client, error) {
+func (repo ClientRepo) Search(search string) ([]*model.Client, error) {
 	query, err := repo.dbProvider.GetSql("client_Search.sql")
 	if err != nil {
 		return nil, err
 	}
 	var clients []*model.Client
-	rows, err := repo.dbProvider.Db.Query(query, search, offset + 1, offset + limit)
+	rows, err := repo.dbProvider.Db.Query(query, search)
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		client := model.NewClient()
+		err := rows.Scan(&client.Id, &client.Name, &client.Type)
+		if err != nil {
+			return nil, err
+		}
+		clients = append(clients, client)
+	}
+	err = rows.Err()
+	if err != nil {
+		return nil, err
+	}
+	return clients, nil
+}
+
+func (repo ClientRepo) SearchRange(search string, from int, to int) ([]*model.Client, error) {
+	query, err := repo.dbProvider.GetSql("client_SearchRange.sql")
+	if err != nil {
+		return nil, err
+	}
+	var clients []*model.Client
+	rows, err := repo.dbProvider.Db.Query(query, search, from + 1, to + 1)
 	if err != nil {
 		return nil, err
 	}

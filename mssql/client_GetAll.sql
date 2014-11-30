@@ -5,3 +5,4 @@ union all
 select id, name, 'GROUP' from dbo.Groups
 union all
 select id, name, 'VILLAGE_BANK' from dbo.Villages
+order by name

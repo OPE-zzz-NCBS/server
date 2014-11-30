@@ -24,7 +24,18 @@ func GetClients(ctx *app.AppContext, w http.ResponseWriter, r *http.Request) {
 	count := 0
 
 	if query != "" {
-		clients, err = repo.Search(query, from, to)
+		count, err = repo.GetSearchCount(query)
+		if err != nil {
+			goto Error
+		}
+		if from == -1 {
+			clients, err = repo.Search(query)
+		} else {
+			clients, err = repo.SearchRange(query, from, to)
+		}
+		if err != nil {
+			goto Error
+		}
 	} else {
 		count, err = repo.GetAllCount()
 		if err != nil {
@@ -32,11 +43,11 @@ func GetClients(ctx *app.AppContext, w http.ResponseWriter, r *http.Request) {
 		}
 		if from == -1 {
 			clients, err = repo.GetAll()
-			if err != nil {
-				goto Error
-			}
 		} else {
 			clients, err = repo.GetRange(from, to)
+		}
+		if err != nil {
+			goto Error
 		}
 	}
 
