@@ -27,4 +27,3 @@ func NewCustomFieldValue() *CustomFieldValue {
 	return value
 }
 
-

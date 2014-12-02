@@ -66,7 +66,6 @@ func GetClients(ctx *app.AppContext, w http.ResponseWriter, r *http.Request) {
 	return
 
 Error:
-	apiError := &app.ApiError{"Internal server error.", err.Error(), ""}
-	sendJsonWithStatus(w, apiError, http.StatusInternalServerError)
+	sendInternalServerError(w, err)
 }
 

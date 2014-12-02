@@ -64,7 +64,8 @@ func main() {
 	apiRouter.Handle("/activities", commonHandlers.Then(appHandler{context, api.GetActivities})).Methods("GET")
 	apiRouter.Handle("/branches", commonHandlers.Then(appHandler{context, api.GetBranches})).Methods("GET")
 	apiRouter.Handle("/cities", commonHandlers.Then(appHandler{context, api.GetCities})).Methods("GET")
-	apiRouter.Handle("/lookupdata", commonHandlers.Then(appHandler{context, api.GetLookupData})).Methods("GET")
+	apiRouter.Handle("/lookup-data", commonHandlers.Then(appHandler{context, api.GetLookupData})).Methods("GET")
+	apiRouter.Handle("/custom-fields", commonHandlers.Then(appHandler{context, api.GetCustomFields})).Methods("GET")
 
 	http.Handle("/", router)
 

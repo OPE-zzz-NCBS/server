@@ -7,8 +7,10 @@ type LookupData struct {
 	Cities []*City `json:"cities"`
 	Districts []*District `json:"districts"`
 	Regions []*Region `json:"regions"`
+	CustomFields []*CustomField `json:"customFields"`
 }
 
 func NewLookupData() *LookupData {
 	return new(LookupData)
 }
+
