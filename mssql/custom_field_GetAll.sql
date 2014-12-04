@@ -9,4 +9,4 @@ select id,
     isnull(extra, '') extra
 from dbo.CustomFields
 where deleted = 0
-order by tab, [order]
+order by owner, tab, [order]
