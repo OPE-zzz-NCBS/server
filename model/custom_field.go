@@ -1,5 +1,9 @@
 package model
 
+type CustomFieldHeader struct {
+	Id int `json:"id"`
+}
+
 type CustomField struct {
 	Id int `json:"id"`
 	Caption string `json:"caption"`
@@ -13,7 +17,7 @@ type CustomField struct {
 }
 
 type CustomFieldValue struct {
-	Field  *CustomField `json:"field"`
+	Field *CustomFieldHeader `json:"field"`
 	Value string `json:"value"`
 }
 
@@ -21,9 +25,15 @@ func NewCustomField() *CustomField {
 	return new(CustomField)
 }
 
-func NewCustomFieldValue() *CustomFieldValue {
-	value := new(CustomFieldValue)
-	value.Field = NewCustomField()
-	return value
+func NewCustomFieldHeader(id int) *CustomFieldHeader {
+	fieldHeader := new(CustomFieldHeader)
+	fieldHeader.Id = id
+	return fieldHeader
 }
 
+func NewCustomFieldValue(fieldId int, value string) *CustomFieldValue {
+	customFieldValue := new(CustomFieldValue)
+	customFieldValue.Field = NewCustomFieldHeader(fieldId)
+	customFieldValue.Value = value
+	return customFieldValue
+}

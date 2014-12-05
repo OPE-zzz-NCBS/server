@@ -7,7 +7,6 @@ type Address struct {
 }
 
 type Person struct {
-	Href string `json:"href"`
 	Id int `json:"id"`
 	FirstName string `json:"firstName"`
 	LastName string `json:"lastName"`
@@ -33,4 +32,3 @@ func NewPerson() *Person {
 	person.Address2 = new(Address)
 	return person
 }
-

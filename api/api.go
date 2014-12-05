@@ -3,9 +3,34 @@ package api
 import (
 	"log"
 	"net/http"
+	"strconv"
 	"encoding/json"
 	"github.com/OPENCBS/server/app"
 )
+
+type APIRequest struct {
+	*http.Request
+	*app.DbProvider
+}
+
+func (r APIRequest) GetRange() (int, int) {
+	var offset int
+	var limit int
+
+	text := r.URL.Query().Get("offset")
+	offset, err := strconv.Atoi(text)
+	if err != nil {
+		offset = 0
+	}
+
+	text = r.URL.Query().Get("limit")
+	limit, err = strconv.Atoi(text)
+	if err != nil {
+		limit = 100
+	}
+
+	return offset, limit
+}
 
 func fail(w http.ResponseWriter, err error) {
 	log.Println(err.Error())
@@ -27,4 +52,3 @@ func sendInternalServerError(w http.ResponseWriter, err error) {
 	apiError := &app.ApiError{"Internal server error", err.Error(), ""}
 	sendJsonWithStatus(w, apiError, http.StatusInternalServerError)
 }
-

@@ -2,12 +2,10 @@ package api
 
 import (
 	"net/http"
-	"strconv"
-	"github.com/gorilla/mux"
 	"github.com/OPENCBS/server/repo"
-	"github.com/OPENCBS/server/app"
 )
 
+/*
 func GetPerson(ctx *app.AppContext, w http.ResponseWriter, r *http.Request) {
 	idString := mux.Vars(r)["id"]
 	id, _ := strconv.Atoi(idString)
@@ -24,4 +22,15 @@ func GetPerson(ctx *app.AppContext, w http.ResponseWriter, r *http.Request) {
 
 	sendJson(w, person)
 }
+*/
 
+func GetPeople(w http.ResponseWriter, r *APIRequest) {
+	repo := repo.NewPersonRepo(r.DbProvider)
+	offset, limit := r.GetRange()
+	people, err := repo.GetPeople(offset, limit)
+	if err != nil {
+		sendInternalServerError(w, err)
+		return
+	}
+	sendJson(w, people)
+}

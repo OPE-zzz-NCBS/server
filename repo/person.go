@@ -1,7 +1,6 @@
 package repo
 
 import (
-	"database/sql"
 	"github.com/OPENCBS/server/model"
 	"github.com/OPENCBS/server/app"
 )
@@ -16,6 +15,71 @@ func NewPersonRepo(dbProvider *app.DbProvider) *PersonRepo {
 	return repo
 }
 
+func (repo PersonRepo) GetPeople(offset int, limit int) ([]*model.Person, error) {
+	query, err := repo.dbProvider.GetSql("person_GetAll.sql")
+	if err != nil {
+		return nil, err
+	}
+	rows, err := repo.dbProvider.Db.Query(query, offset + 1, offset + limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var person *model.Person
+	var people []*model.Person
+	for rows.Next() {
+		thisPerson := model.NewPerson()
+		var customFieldId int
+		var customFieldValue string
+		err := rows.Scan(
+			&thisPerson.Id,
+			&thisPerson.FirstName,
+			&thisPerson.LastName,
+			&thisPerson.FatherName,
+			&thisPerson.Sex,
+			&thisPerson.BirthDate,
+			&thisPerson.BirthPlace,
+			&thisPerson.IdentificationData,
+			&thisPerson.Nationality,
+			&thisPerson.ActivityId,
+			&thisPerson.BranchId,
+			&thisPerson.HomePhone,
+			&thisPerson.PersonalPhone,
+			&thisPerson.Address1.CityId,
+			&thisPerson.Address1.Address,
+			&thisPerson.Address1.PostalCode,
+			&thisPerson.Address2.CityId,
+			&thisPerson.Address2.Address,
+			&thisPerson.Address2.PostalCode,
+			&customFieldId,
+			&customFieldValue,
+		)
+		if err != nil {
+			return nil, err
+		}
+		if person == nil || person.Id != thisPerson.Id {
+			if person != nil {
+				people = append(people, person)
+			}
+			person = thisPerson
+		}
+		if customFieldId > 0 {
+			value := model.NewCustomFieldValue(customFieldId, customFieldValue)
+			person.CustomInformation = append(person.CustomInformation, value)
+		}
+	}
+	if person != nil {
+		people = append(people, person)
+	}
+	err = rows.Err()
+	if err != nil {
+		return nil, err
+	}
+	return people, nil
+}
+
+/*
 func (repo PersonRepo) GetById(id int) (*model.Person, error) {
 	query, err := repo.dbProvider.GetSql("person_GetById.sql")
 	if err != nil {
@@ -95,4 +159,4 @@ func (repo PersonRepo) getCustomInformation(id int) ([]*model.CustomFieldValue, 
 	}
 	return values, nil
 }
-
+*/
