@@ -82,7 +82,7 @@ func main() {
 	http.Handle("/", router)
 
 	log.Println("OPENCBS server is running...")
-	http.ListenAndServe(":3000", nil)
+	http.ListenAndServe(":8080", nil)
 }
 
 func getDb() (*sql.DB, error) {

@@ -32,5 +32,9 @@ func GetPeople(w http.ResponseWriter, r *APIRequest) {
 		sendInternalServerError(w, err)
 		return
 	}
-	sendJson(w, people)
+	if r.CanAcceptGzip() {
+		sendCompressedJson(w, people)
+	} else {
+		sendJson(w, people)
+	}
 }

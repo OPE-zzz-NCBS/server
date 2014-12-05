@@ -4,7 +4,9 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 	"encoding/json"
+	"compress/gzip"
 	"github.com/OPENCBS/server/app"
 )
 
@@ -32,6 +34,13 @@ func (r APIRequest) GetRange() (int, int) {
 	return offset, limit
 }
 
+func (r APIRequest) CanAcceptGzip() bool {
+	if contentEncoding, ok := r.Header["Accept-Encoding"]; ok {
+		return strings.Contains(contentEncoding[0], "gzip")
+	}
+	return false
+}
+
 func fail(w http.ResponseWriter, err error) {
 	log.Println(err.Error())
 	http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -42,10 +51,22 @@ func sendJson(w http.ResponseWriter, obj interface{}) {
 }
 
 func sendJsonWithStatus(w http.ResponseWriter, obj interface{}, status int) {
-	json, _ := json.MarshalIndent(obj, "", "  ")
 	w.Header().Set("Content-Type", "application/json;charset=utf-8")
 	w.WriteHeader(status)
-	w.Write(json)
+	json.NewEncoder(w).Encode(obj)
+}
+
+func sendCompressedJson(w http.ResponseWriter, obj interface{}) {
+	sendCompressedJsonWithStatus(w, obj, http.StatusOK)
+}
+
+func sendCompressedJsonWithStatus(w http.ResponseWriter, obj interface{}, status int) {
+	w.Header().Set("Content-Type", "application/json;charset=utf-8")
+	w.Header().Set("Content-Encoding", "gzip")
+	w.WriteHeader(status)
+	gz := gzip.NewWriter(w)
+	json.NewEncoder(gz).Encode(obj)
+	gz.Close()
 }
 
 func sendInternalServerError(w http.ResponseWriter, err error) {
