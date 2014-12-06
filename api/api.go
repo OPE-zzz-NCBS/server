@@ -1,7 +1,6 @@
 package api
 
 import (
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -9,6 +8,12 @@ import (
 	"compress/gzip"
 	"github.com/OPENCBS/server/app"
 )
+
+type ApiError struct {
+	Message string `json:"message"`
+	DeveloperMessage string `json:"developerMessage"`
+	Url string `json:"url"`
+}
 
 type APIRequest struct {
 	*http.Request
@@ -41,11 +46,6 @@ func (r APIRequest) CanAcceptGzip() bool {
 	return false
 }
 
-func fail(w http.ResponseWriter, err error) {
-	log.Println(err.Error())
-	http.Error(w, err.Error(), http.StatusInternalServerError)
-}
-
 func sendJson(w http.ResponseWriter, obj interface{}) {
 	sendJsonWithStatus(w, obj, http.StatusOK)
 }
@@ -70,6 +70,6 @@ func sendCompressedJsonWithStatus(w http.ResponseWriter, obj interface{}, status
 }
 
 func sendInternalServerError(w http.ResponseWriter, err error) {
-	apiError := &app.ApiError{"Internal server error", err.Error(), ""}
+	apiError := &ApiError{"Internal server error", err.Error(), ""}
 	sendJsonWithStatus(w, apiError, http.StatusInternalServerError)
 }

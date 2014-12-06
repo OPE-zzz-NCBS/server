@@ -11,7 +11,7 @@ import (
 func GetClients(ctx *app.AppContext, w http.ResponseWriter, r *http.Request) {
 	from, to, err := app.GetRange("clients", r)
 	if err != nil {
-		apiError := &app.ApiError{"Requested range is not valid.", err.Error(), ""}
+		apiError := &ApiError{"Requested range is not valid.", err.Error(), ""}
 		sendJsonWithStatus(w, apiError, http.StatusRequestedRangeNotSatisfiable)
 		return
 	}

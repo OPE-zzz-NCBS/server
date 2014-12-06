@@ -65,6 +65,9 @@ func main() {
 
 	router := mux.NewRouter()
 	apiRouter := router.PathPrefix("/api").Subrouter()
+	apiRouter.Handle("/sessions", commonHandlers.Then(Handler{context, api.AddSession})).Methods("POST")
+	apiRouter.Handle("/sessions", commonHandlers.Then(Handler{context, api.DeleteSession})).Methods("DELETE")
+
 	apiRouter.Handle("/people", commonHandlers.Then(Handler{context, api.GetPeople})).Methods("GET")
 
 	//apiRouter.Handle("/users", commonHandlers.Then(appHandler{context, api.GetUsers})).Methods("GET")

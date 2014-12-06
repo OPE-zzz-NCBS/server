@@ -18,7 +18,7 @@ func GetUsers(ctx *app.AppContext, w http.ResponseWriter, r *http.Request) {
 	limit := util.GetLimit(r)
 	items, err := repo.GetAll(offset, limit)
 	if err != nil {
-		fail(w, err)
+		//fail(w, err)
 		return
 	}
 	for _, user := range items {
@@ -39,7 +39,7 @@ func GetUser(ctx *app.AppContext, w http.ResponseWriter, r *http.Request) {
 	repo := repo.NewUserRepo(ctx.DbProvider)
 	user, err := repo.GetById(id)
 	if err != nil {
-		fail(w, err)
+		//fail(w, err)
 		return
 	}
 	if user == nil {

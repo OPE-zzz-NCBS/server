@@ -10,7 +10,7 @@ func GetCities(ctx *app.AppContext, w http.ResponseWriter, r *http.Request) {
 	repo := repo.NewCityRepo(ctx.DbProvider)
 	cities, err := repo.GetAll()
 	if err != nil {
-		fail(w, err)
+		//fail(w, err)
 		return
 	}
 	sendJson(w, cities)
