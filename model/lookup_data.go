@@ -2,7 +2,7 @@ package model
 
 type LookupData struct {
 	Href string `json:"href"`
-	Activities []*Activity `json:"economicActivities"`
+	//Activities []*Activity `json:"economicActivities"`
 	Branches []*Branch `json:"branches"`
 	Cities []*City `json:"cities"`
 	Districts []*District `json:"districts"`

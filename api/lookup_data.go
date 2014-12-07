@@ -1,5 +1,6 @@
 package api
 
+/*
 import (
 	"net/http"
 	"github.com/OPENCBS/server/model"
@@ -47,4 +48,4 @@ func GetLookupData(ctx *app.AppContext, w http.ResponseWriter, r *http.Request) 
 Error:
 	sendInternalServerError(w, err)
 }
-
+*/
