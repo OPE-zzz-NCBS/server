@@ -72,6 +72,8 @@ func main() {
 
 	apiRouter.Handle("/economic-activities", commonHandlers.Then(Handler{context, api.GetEconomicActivities})).Methods("GET")
 
+	apiRouter.Handle("/branches", commonHandlers.Then(Handler{context, api.GetBranches})).Methods("GET")
+
 	//apiRouter.Handle("/users", commonHandlers.Then(appHandler{context, api.GetUsers})).Methods("GET")
 	//apiRouter.Handle("/users/{id:[0-9]+}", commonHandlers.Then(appHandler{context, api.GetUser})).Methods("GET")
 	//apiRouter.Handle("/sessions", commonHandlers.Then(appHandler{context, api.AddSession})).Methods("POST")
