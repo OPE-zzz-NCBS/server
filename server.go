@@ -69,10 +69,11 @@ func main() {
 	apiRouter.Handle("/sessions", commonHandlers.Then(Handler{context, api.DeleteSession})).Methods("DELETE")
 
 	apiRouter.Handle("/people", commonHandlers.Then(Handler{context, api.GetPeople})).Methods("GET")
-
 	apiRouter.Handle("/economic-activities", commonHandlers.Then(Handler{context, api.GetEconomicActivities})).Methods("GET")
-
 	apiRouter.Handle("/branches", commonHandlers.Then(Handler{context, api.GetBranches})).Methods("GET")
+	apiRouter.Handle("/cities", commonHandlers.Then(Handler{context, api.GetCities})).Methods("GET")
+	apiRouter.Handle("/districts", commonHandlers.Then(Handler{context, api.GetDistricts})).Methods("GET")
+	apiRouter.Handle("/regions", commonHandlers.Then(Handler{context, api.GetRegions})).Methods("GET")
 
 	//apiRouter.Handle("/users", commonHandlers.Then(appHandler{context, api.GetUsers})).Methods("GET")
 	//apiRouter.Handle("/users/{id:[0-9]+}", commonHandlers.Then(appHandler{context, api.GetUser})).Methods("GET")
