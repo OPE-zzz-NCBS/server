@@ -39,3 +39,4 @@ left join dbo.City c2 on c2.name = ti.secondary_city
 	and c2.district_id = ti.secondary_district_id
 	and c2.deleted = 0
 where t.num between ? and ?
+order by t.id
