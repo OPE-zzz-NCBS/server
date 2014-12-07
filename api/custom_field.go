@@ -2,19 +2,16 @@ package api
 
 import (
 	"net/http"
-	"github.com/OPENCBS/server/app"
 	"github.com/OPENCBS/server/repo"
 )
 
-func GetCustomFields(ctx *app.AppContext, w http.ResponseWriter, r *http.Request) {
-	repo := repo.NewCustomFieldRepo(ctx.DbProvider)
+func GetCustomFields(w http.ResponseWriter, r *APIRequest) {
+	repo := repo.NewCustomFieldRepo(r.DbProvider)
 	customFields, err := repo.GetAll()
 	if err != nil {
-		apiError := &ApiError{"Internal server error.", err.Error(), ""}
-		sendJsonWithStatus(w, apiError, http.StatusInternalServerError)
+		sendInternalServerError(w, err)
 		return
 	}
 
 	sendJson(w, customFields)
 }
-
