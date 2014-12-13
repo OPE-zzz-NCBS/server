@@ -8,24 +8,19 @@ import (
 
 	"github.com/OPENCBS/server/repo"
 	"github.com/OPENCBS/server/model"
-	"github.com/OPENCBS/server/util"
 	"github.com/OPENCBS/server/app"
 )
 
 func GetUsers(ctx *app.AppContext, w http.ResponseWriter, r *http.Request) {
 	repo := repo.NewUserRepo(ctx.DbProvider)
-	offset := util.GetOffset(r)
-	limit := util.GetLimit(r)
+	offset := 0
+	limit := 100
 	items, err := repo.GetAll(offset, limit)
 	if err != nil {
 		//fail(w, err)
 		return
 	}
-	for _, user := range items {
-		user.Href = util.GetUserUrl(r, user)
-	}
 	users := new(model.Users)
-	users.Href = util.GetUsersUrl(r)
 	users.Offset = offset
 	users.Limit = limit
 	users.Items = items
@@ -46,7 +41,6 @@ func GetUser(ctx *app.AppContext, w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "User not found", http.StatusNotFound)
 		return
 	}
-	user.Href = util.GetUserUrl(r, user)
 
 	sendJson(w, user)
 }

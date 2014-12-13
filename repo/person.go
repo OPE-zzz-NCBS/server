@@ -79,6 +79,81 @@ func (repo PersonRepo) GetPeople(offset int, limit int) ([]*model.Person, error)
 	return people, nil
 }
 
+func (repo PersonRepo) Add(person *model.Person) (*model.Person, error) {
+	tx, err := repo.dbProvider.Db.Begin()
+	if err != nil {
+		return nil, err
+	}
+	query, err := repo.dbProvider.GetSql("client_AddTiers.sql")
+	if err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+
+	stmt, err := tx.Prepare(query)
+	if err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+
+	res, err := stmt.Exec(
+		person.Address1.CityId,
+		person.Address2.CityId,
+		person.BranchId,
+		person.HomePhone,
+		person.PersonalPhone,
+		person.Email,
+		person.Address1.Address,
+		person.Address1.PostalCode,
+		person.Address2.Address,
+		person.Address2.PostalCode,
+	)
+	if err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+
+	id, err := res.LastInsertId()
+	if err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+
+	query, err = repo.dbProvider.GetSql("person_Add.sql")
+	if err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+
+	stmt, err = tx.Prepare(query)
+	if err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+
+	person.Id = int(id)
+	_, err = stmt.Exec(
+		person.Id,
+		person.FirstName,
+		person.LastName,
+		person.FatherName,
+		person.Sex,
+		person.BirthDate,
+		person.BirthPlace,
+		person.IdentificationData,
+		person.Nationality,
+		person.ActivityId,
+	)
+	if err != nil {
+		person.Id = 0
+		tx.Rollback()
+		return nil, err
+	}
+
+	tx.Commit()
+	return person, nil
+}
+
 /*
 func (repo PersonRepo) GetById(id int) (*model.Person, error) {
 	query, err := repo.dbProvider.GetSql("person_GetById.sql")

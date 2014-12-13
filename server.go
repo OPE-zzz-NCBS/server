@@ -69,6 +69,7 @@ func main() {
 	apiRouter.Handle("/sessions", commonHandlers.Then(Handler{context, api.DeleteSession})).Methods("DELETE")
 
 	apiRouter.Handle("/people", commonHandlers.Then(Handler{context, api.GetPeople})).Methods("GET")
+	apiRouter.Handle("/people", commonHandlers.Then(Handler{context, api.AddPerson})).Methods("POST")
 	apiRouter.Handle("/economic-activities", commonHandlers.Then(Handler{context, api.GetEconomicActivities})).Methods("GET")
 	apiRouter.Handle("/branches", commonHandlers.Then(Handler{context, api.GetBranches})).Methods("GET")
 	apiRouter.Handle("/cities", commonHandlers.Then(Handler{context, api.GetCities})).Methods("GET")
@@ -78,7 +79,6 @@ func main() {
 
 	//apiRouter.Handle("/users", commonHandlers.Then(appHandler{context, api.GetUsers})).Methods("GET")
 	//apiRouter.Handle("/users/{id:[0-9]+}", commonHandlers.Then(appHandler{context, api.GetUser})).Methods("GET")
-	//apiRouter.Handle("/clients", commonHandlers.Then(appHandler{context, api.GetClients})).Methods("GET")
 	//apiRouter.Handle("/people/{id:[0-9]+}", commonHandlers.Then(appHandler{context, api.GetPerson})).Methods("GET")
 
 	http.Handle("/", router)
