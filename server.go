@@ -79,7 +79,6 @@ func main() {
 
 	//apiRouter.Handle("/users", commonHandlers.Then(appHandler{context, api.GetUsers})).Methods("GET")
 	//apiRouter.Handle("/users/{id:[0-9]+}", commonHandlers.Then(appHandler{context, api.GetUser})).Methods("GET")
-	//apiRouter.Handle("/people/{id:[0-9]+}", commonHandlers.Then(appHandler{context, api.GetPerson})).Methods("GET")
 
 	http.Handle("/", router)
 
