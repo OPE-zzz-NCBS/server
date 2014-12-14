@@ -8,6 +8,7 @@ type Address struct {
 
 type Person struct {
 	Id int `json:"id"`
+	UUID string  `json:"uuid"`
 	FirstName string `json:"firstName"`
 	LastName string `json:"lastName"`
 	FatherName string `json:"fatherName"`

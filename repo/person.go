@@ -34,6 +34,7 @@ func (repo PersonRepo) GetPeople(offset int, limit int) ([]*model.Person, error)
 		var customFieldValue string
 		err := rows.Scan(
 			&thisPerson.Id,
+			&thisPerson.UUID,
 			&thisPerson.FirstName,
 			&thisPerson.LastName,
 			&thisPerson.FatherName,

@@ -1,4 +1,5 @@
 select t.id,
+	convert(nvarchar(36), p.uuid) uuid,
 	p.first_name,
 	p.last_name,
 	isnull(p.father_name, '') father_name,
