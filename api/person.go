@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"net/http"
 	"encoding/json"
 	"github.com/OPENCBS/server/repo"
@@ -41,10 +40,10 @@ func AddPerson(w http.ResponseWriter, r *APIRequest) {
 	repo := repo.NewPersonRepo(r.DbProvider)
 	result, err := repo.Add(&person)
 	if err != nil {
-		fmt.Println(err)
-	} else {
-		fmt.Printf("%+v\n", result)
+		sendInternalServerError(w, err)
+		return
 	}
+	sendJsonWithStatus(w, result, http.StatusCreated)
 }
 
 func validatePerson(person model.Person) error {
