@@ -4,3 +4,4 @@ conf.json
 mssql/repo/sql.go
 mssql/mssql.go
 _server.go
+tmp/*

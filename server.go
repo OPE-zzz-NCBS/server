@@ -76,6 +76,7 @@ func main() {
 	apiRouter.Handle("/districts", commonHandlers.Then(Handler{context, api.GetDistricts})).Methods("GET")
 	apiRouter.Handle("/regions", commonHandlers.Then(Handler{context, api.GetRegions})).Methods("GET")
 	apiRouter.Handle("/custom-fields", commonHandlers.Then(Handler{context, api.GetCustomFields})).Methods("GET")
+	apiRouter.Handle("/cache", commonHandlers.Then(Handler{context, api.GetCache})).Methods("GET")
 
 	//apiRouter.Handle("/users", commonHandlers.Then(appHandler{context, api.GetUsers})).Methods("GET")
 	//apiRouter.Handle("/users/{id:[0-9]+}", commonHandlers.Then(appHandler{context, api.GetUser})).Methods("GET")
